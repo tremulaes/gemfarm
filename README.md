@@ -15,6 +15,8 @@ You are a farmer named Ruby who owns and operates a small piece of land on which
 
 #### Fire Opal Radishes
 
+#### Amethyst Bamboo
+
 ## Credits
 
-All code written by Chris Singer and Mary Baylis, Copyright (c) 2015.
+All code written by Chris Singer, Erin Smith, and Mary Baylis, Copyright (c) 2015.
