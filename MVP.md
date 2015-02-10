@@ -15,11 +15,11 @@ Here's where it begins. We will handle this as a core group of functions and nee
 1. I expect to see the game on my screen and for it to update as events change.
 2. I expect to see a title screen.
 3. I expect to see a "field" screen.
-⋅⋅* The field screen is a general term to describe the main interactive screen, aka, the map with sprites.
+  * The field screen is a general term to describe the main interactive screen, aka, the map with sprites.
 4. I expect to see the player as an animated sprite.
 5. I expect to be able to move the player sprite around via input keys.
 6. I expect to experience collision detection.
-⋅⋅* Collision detection is the idea that you will eventually run into something through which you cannot pass.
+  * Collision detection is the idea that you will eventually run into something through which you cannot pass.
 
 With these 6 points complete, we move to stage 2.
 
@@ -30,9 +30,9 @@ Once the most basic elements of the game are up and running from stage 1, we can
 The purpose of this stage is to implement the crop system, the crop entities, and player actions. Concepts of time passing and player actions will be placed here, though nothing extensive is required. This is setting up the game system, not completing it. More specifically:
 
 1. I expect there to be one crop with which the player can interact with:
-⋅⋅1. I expect the crop to have four different life stages.
-⋅⋅2. I expect the crop to accept different actions and react appropriately.
-⋅⋅3. I expect the crop to be displayed through an animated sprite.
+  1. I expect the crop to have four different life stages.
+  2. I expect the crop to accept different actions and react appropriately.
+  3. I expect the crop to be displayed through an animated sprite.
 2. I expect the player to have a pool of energy to expend through actions.
 3. I expect the player to be able to initiate 'day turn', marking the passage of time.
 4. I expect the player's energy pool to reset each day.
