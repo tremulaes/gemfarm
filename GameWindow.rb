@@ -1,8 +1,8 @@
 require 'gosu'
 require_relative "sprite_data"
 require_relative 'SpriteAnimation'
-require_relative 'Ruby'
-
+# require_relative 'Ruby'
+require_relative 'map'
 
 class GameWindow < Gosu::Window
   def initialize
@@ -15,7 +15,6 @@ class GameWindow < Gosu::Window
    	@walk_left_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_left_animation][:animation_arguments])
     @walk_right_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_right_animation][:animation_arguments])
     @walk_up_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_up_animation][:animation_arguments])
-
   end
 
   def update
@@ -47,52 +46,8 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-
-
-
-  	# @walk_down_animation.draw
-  	# @walk_left_animation.draw(16, 0)
-   #  @walk_up_animation.draw(32, 0)
-   #  @walk_right_animation.draw(48, 0)
-  	# # @ruby_image.draw(0,0,0)
+    @map.draw
   end
-
-
 end
-
-# class SpriteAnimation
-
-# 	def initialize(img, start_index = 0, last_index = img.width/img.height, seconds_per_frame = 0.25)
-# 		@img_array = img.load_tiles(GameWindow::GameWindow, img, start_index, last_index)
-# 		@tile_count = 0
-# 		@start_time
-# 		@seconds_per_frame = seconds_per_frame
-# 		@last_update_time = Time.now
-# 	end
-
-# 	def play_animation
-
-# 	end
-
-# 	def freeze_animation
-# 	end
-
-# 	def update
-# 		if (Time.now - @last_update_time) > Aseconds_per_frame
-# 			@last_update_time = Time.now
-# 			if @tile_count >= @img_array.size
-# 				@tile_count = 0
-# 			else
-# 				@tile_count += 1
-# 			end
-# 		end
-# 	end
-
-# 	def draw
-# 		@img_array[tile_count].draw(0, 0, 0)
-
-# 	end
-# end
-
 window = GameWindow.new
 window.show

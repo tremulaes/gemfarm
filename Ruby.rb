@@ -1,7 +1,6 @@
 require "gosu"
 
 
-
 class Ruby
 
 attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
