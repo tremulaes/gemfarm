@@ -1,44 +1,44 @@
 require 'gosu'
 require_relative "sprite_data"
 require_relative 'SpriteAnimation'
-require_relative 'Ruby'
-
+# require_relative 'Ruby'
+require_relative 'map'
 
 class GameWindow < Gosu::Window
-  def initialize
-   super(960, 640, false)
-   @window = self
-   self.caption = 'Gem Farm'
-   ruby = Ruby.new
+  def initializeW
+    super(960, 640, false)
+    @window = self
+    self.caption = 'Gem Farm'
+    # ruby = Ruby.new
 
-   	@walk_down_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_down_animation][:animation_arguments])
-   	@walk_left_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_left_animation][:animation_arguments])
-    @walk_right_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_right_animation][:animation_arguments])
-    @walk_up_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_up_animation][:animation_arguments])
+   	# @walk_down_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_down_animation][:animation_arguments])
+   	# @walk_left_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_left_animation][:animation_arguments])
+    # @walk_right_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_right_animation][:animation_arguments])
+    # @walk_up_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_up_animation][:animation_arguments])
 
+    @map = Map.new(self, MAP_ARRAY)
   end
 
   def update
-    if ruby.move_down
-  	 @walk_down_animation.update
-    elsif ruby.move_left
-  	 @walk_left_animation.update
-    elsif ruby.move_right
-      @walk_right_animation.update
-    elsif ruby.move_up
-      @walk_up_animation.update
-    end
+    # if ruby.move_down
+  	 # @walk_down_animation.update
+    # elsif ruby.move_left
+  	 # @walk_left_animation.update
+    # elsif ruby.move_right
+    #   @walk_right_animation.update
+    # elsif ruby.move_up
+    #   @walk_up_animation.update
+    # end
   end
 
   def draw
-  	@walk_down_animation.draw
-  	@walk_left_animation.draw(16, 0)
-    @walk_up_animation.draw(32, 0)
-    @walk_right_animation.draw(48, 0)
+  	# @walk_down_animation.draw
+  	# @walk_left_animation.draw(16, 0)
+   #  @walk_up_animation.draw(32, 0)
+   #  @walk_right_animation.draw(48, 0)
   	# @ruby_image.draw(0,0,0)
+    @map.draw
   end
-
-
 end
 
 # class SpriteAnimation

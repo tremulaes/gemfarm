@@ -1,15 +1,17 @@
+require_relative 'mapdata'
+
 class Map
-  def initialize(array)
+  def initialize(window, array)
     @map_array = array
     @scale = 4
-    @tileset = Gosu::Image::load_tiles(self, "media/map_tileset.png", 16, 16, false)
+    @tileset = Gosu::Image::load_tiles(window, "media/tileset/map_tileset.png", 16, 16, true)
   end
 
   def draw
-    @map_array.each_with_index |subarray, y_index| do
-      subarray.each_with_index |cell, x_index| do
-        img = tileset[y_index[x_index]]
-        img.draw((x_index * @scale) + 1, (y_index * @scale) + 1, 0, 4, 4)
+    @map_array.each_with_index do |subarray, y_index|
+      subarray.each_with_index do |cell, x_index|
+        img = @tileset[cell]
+        img.draw((x_index * 64) + 0, (y_index * 64) + 0, 0, @scale, @scale)
       end
     end
   end
