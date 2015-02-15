@@ -13,6 +13,7 @@ class GameWindow < Gosu::Window
     @background_music.play(true)
     @ruby.warp(400,300)
     @crops = []
+
     @crops << Crop.new(64,64,'placeholder', self, @map)
     @crops << Crop.new(64,128,'placeholder', self, @map)
     @crops << Crop.new(64,192,'placeholder', self, @map)

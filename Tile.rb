@@ -1,5 +1,5 @@
 class Tile
-	attr_reader :x, :y
+	attr_reader :x, :y, :tile_id
 	attr_accessor :collidable
 
 	def initialize(tile_hash)
@@ -7,6 +7,7 @@ class Tile
 		@y = tile_hash[:y]
 		@collidable = tile_hash[:collidable]
 		@img = tile_hash[:img]
+		@tile_id = tile_hash[:id]
 	end
 
 	def collidable?

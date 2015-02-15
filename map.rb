@@ -19,7 +19,8 @@ class Map
           x: x_index * 64,
           y: y_index * 64,
           collidable: MAP_COLL.include?(cell),
-          img: @tileset[cell]
+          img: @tileset[cell],
+          tile_id: cell
         }
         @tile_array[y_index][x_index] = Tile.new(tile_hash)  
       end
