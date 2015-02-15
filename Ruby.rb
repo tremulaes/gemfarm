@@ -24,13 +24,13 @@ attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :posit
     def update
 
         if @move_down
-            # step(0, 64)
+             step(0, 64)
             @walk_down_animation.update
         elsif @move_left
-            # step(-64, 0)
+             step(-64, 0)
             @walk_left_animation.update
         elsif @move_right
-            # step(64, 0)
+             step(64, 0)
             @walk_right_animation.update
         elsif @move_up
              step(0, -64)
@@ -42,21 +42,30 @@ attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :posit
 
     def step(x, y)
 
+        @new_position_y = @position_y + y
+        @new_position_x = @position_x + x
+        puts "new positions = " + @position_x.to_s + ", " + @position_y.to_s
+
         if x < 0
-            while @position_x > @position_x + x
+            while @position_x > @new_position_x + x
+                puts "position x = " + @position_x.to_s             
                 @position_x = @position_x - 1
             end
         elsif y < 0 #move up
-            while @position_y >= position_y + y
-                puts @position_y
+            while @position_y >= @new_position_y + y
+                puts "position y = " + @position_y.to_s
+                puts y
                 @position_y = @position_y - 1
             end
         elsif y > 0
-            while @position_y < @position_y + y
+            while @position_y < @new_position_y + y
                 @position_y = @position_y + 1
+                puts "posotion y = " + @position_y.to_s
+                puts y
             end
         elsif x > 0 
-            while @position_x < @position_x + x
+            while @position_x < @new_position_x + x
+                puts "position x = " + @position_x.to_s
                 @position_x = @position_x + 1
             end
         end
@@ -69,13 +78,13 @@ attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :posit
 
     def draw
         if @move_down
-         @walk_down_animation.draw(position_x, position_y, 1)
+         @walk_down_animation.draw(position_x, position_y, 1, 4, 4)
         elsif @move_left
-         @walk_left_animation.draw(position_x, position_y, 1)
+         @walk_left_animation.draw(position_x, position_y, 1, 4, 4)
         elsif @move_right
-          @walk_right_animation.draw(position_x, position_y, 1)
+          @walk_right_animation.draw(position_x, position_y, 1, 4, 4)
         elsif @move_up
-          @walk_up_animation.draw(position_x, position_y, 1)
+          @walk_up_animation.draw(position_x, position_y, 1, 4, 4)
         end
     end
 end
