@@ -12,6 +12,7 @@ class Ruby
     @direction = :down
     @x = @y = @vel_x = @vel_y = 0
     @expected_x, @expected_y = 0, 0
+    # @current_tile = WORK HERE- REDO MOVEMENT SO THAT IT'S TILE-BASED
   end
 
   def warp(x, y)
