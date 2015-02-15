@@ -26,6 +26,15 @@ class Map
     end    
   end
 
+  def tile_num_at(x, y)
+    coords = [x / 64, y / 64]
+    coords
+  end
+
+  def tile_at(x, y)
+    @tile_array[y / 64][x / 64]
+  end
+
   def draw
     @tile_array.each_with_index do |subarray, y_index|
       subarray.each_with_index do |cell, x_index|
