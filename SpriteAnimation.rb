@@ -29,8 +29,8 @@ class SpriteAnimation
 		end
 	end
 
-	def draw(x = 0, y = 0)
-		@frames_array[@tile_count].draw(x, y, 0)
+	def draw(x = 0, y = 0, z = 1)
+		@frames_array[@tile_count].draw(x, y, z)
 
 	end
 end
