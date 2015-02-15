@@ -15,12 +15,17 @@ class Ruby
     @x = @y = @vel_x = @vel_y = 0
     @current_tile = @map.tile_at(@x, @y)
     @expected_tile = @current_tile
+    @facing_tile
   end
 
   def warp(x, y)
     @x, @y = @map.tile_at(x, y).x, @map.tile_at(x, y).y
     @current_tile = @map.tile_at(@x, @y)
     @expected_tile = @current_tile
+  end
+
+  def interact
+    @map.tile_at(@facing_tile.x, @facing_tile.y).touch
   end
 
   def accelerate(direction)
@@ -49,6 +54,7 @@ class Ruby
         @vel_y = 0
         @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
       end
+        @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
       @vel_x = 0
     when :down
       @y += @vel_y
@@ -56,6 +62,7 @@ class Ruby
         @vel_y = 0
         @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
       end
+        @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
       @vel_x = 0
     when :left
       @x += @vel_x
@@ -63,6 +70,7 @@ class Ruby
         @vel_x = 0
         @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
       end
+        @facing_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
       @vel_y= 0
     when :right
       @x += @vel_x
@@ -70,6 +78,7 @@ class Ruby
         @vel_x = 0
         @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
       end
+        @facing_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
       @vel_y = 0
     end
   end

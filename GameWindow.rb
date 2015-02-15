@@ -12,24 +12,24 @@ class GameWindow < Gosu::Window
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     @ruby.warp(400,300)
-    @crops = []
+    @crops = @map.crop_array
 
-    @crops << Crop.new(64,64,'placeholder', self, @map)
-    @crops << Crop.new(64,128,'placeholder', self, @map)
-    @crops << Crop.new(64,192,'placeholder', self, @map)
-    @crops << Crop.new(64,256,'placeholder', self, @map)
-    @crops << Crop.new(64,320,'placeholder', self, @map)
-    @crops << Crop.new(64,384,'placeholder', self, @map)
-    @crops << Crop.new(64,448,'placeholder', self, @map)
-    @crops << Crop.new(64,512,'placeholder', self, @map)
-    @crops << Crop.new(832,64,'placeholder', self, @map)
-    @crops << Crop.new(832,128,'placeholder', self, @map)
-    @crops << Crop.new(832,192,'placeholder', self, @map)
-    @crops << Crop.new(832,256,'placeholder', self, @map)
-    @crops << Crop.new(832,320,'placeholder', self, @map)
-    @crops << Crop.new(832,384,'placeholder', self, @map)
-    @crops << Crop.new(832,448,'placeholder', self, @map)
-    @crops << Crop.new(832,512,'placeholder', self, @map)
+    # @map.set_crop(64,64,'placeholder', @map, self)
+    # @map.set_crop(64,128,'placeholder', @map, self)
+    # @map.set_crop(64,192,'placeholder', @map, self)
+    # @map.set_crop(64,256,'placeholder', @map, self)
+    # @map.set_crop(64,320,'placeholder', @map, self)
+    # @map.set_crop(64,384,'placeholder', @map, self)
+    # @map.set_crop(64,448,'placeholder', @map, self)
+    # @map.set_crop(64,512,'placeholder', @map, self)
+    # @crops << Crop.new(832,64,'placeholder', self, @map)
+    # @crops << Crop.new(832,128,'placeholder', self, @map)
+    # @crops << Crop.new(832,192,'placeholder', self, @map)
+    # @crops << Crop.new(832,256,'placeholder', self, @map)
+    # @crops << Crop.new(832,320,'placeholder', self, @map)
+    # @crops << Crop.new(832,384,'placeholder', self, @map)
+    # @crops << Crop.new(832,448,'placeholder', self, @map)
+    # @crops << Crop.new(832,512,'placeholder', self, @map)
   end
 
   def update
@@ -44,8 +44,8 @@ class GameWindow < Gosu::Window
         @ruby.accelerate(:down)
       end
     end
+    @crops = @map.crop_array
     @ruby.move
-    @crops.each { |crop| crop.grow }
   end
 
   def draw
@@ -55,8 +55,12 @@ class GameWindow < Gosu::Window
   end
 
   def button_down(id)
-    if id == Gosu::KbEscape
-      close
+    if @ruby.vel_x == 0 && @ruby.vel_y == 0
+      if id == Gosu::KbEscape
+        close
+      elsif id == Gosu::KbZ
+        @ruby.interact
+      end
     end
   end
 end
