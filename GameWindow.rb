@@ -7,39 +7,30 @@ require_relative 'map'
 class GameWindow < Gosu::Window
   def initialize
     super(960, 640, false)
-    @window = self
     self.caption = 'Gem Farm'
-    @ruby = Ruby.new(@window)
+    @ruby = Ruby.new(self)
     @map = Map.new(self, MAP_ARRAY)
-
-    @walk_down_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_down_animation][:animation_arguments])
-   	@walk_left_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_left_animation][:animation_arguments])
-    @walk_right_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_right_animation][:animation_arguments])
-    @walk_up_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_up_animation][:animation_arguments])
+    @ruby.warp(400,300)
   end
 
   def update
-    if button_down? Gosu::KbUp or button_down? Gosu::GpUp or button_down? Gosu::KbW
-      @ruby.move_up = true
-      # @ruby.step(0, 64)
-    end
+    # if button_down(Gosu::KbUp) || button_down(Gosu::GpUp) || button_down(Gosu::KbW)
+    #   @ruby.accelerate(:up)
+    # end
 
-    if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft or button_down? Gosu::KbA
-      @ruby.move_left = true
-      # @ruby.step(-64, 0)
-    end
+    # if button_down(Gosu::KbLeft) || button_down(Gosu::GpLeft) || button_down(Gosu::KbA)
+    #   @ruby.accelerate(:left)
+    # end
 
-    if button_down? Gosu::KbRight or button_down? Gosu::GpRight or button_down? Gosu::KbD
-      @ruby.move_right = true
-      # @ruby.step(64, 0)
-    end
+    # if button_down(Gosu::KbRight) || button_down(Gosu::GpRight) || button_down(Gosu::KbD)
+    #   @ruby.accelerate(:right)
+    # end
 
-    if button_down? Gosu::KbDown or button_down? Gosu::GpDown or button_down? Gosu::KbS
-      @ruby.move_down = true
-      #@ruby.step(0, -64)
-    end
+    # if button_down(Gosu::KbDown) || button_down(Gosu::GpDown) || button_down(Gosu::KbS)
+    #   @ruby.accelerate(:down)
+    # end
 
-    @ruby.update
+    @ruby.move
   end
 
   def draw
@@ -50,6 +41,14 @@ class GameWindow < Gosu::Window
   def button_down(id)
     if id == Gosu::KbEscape
       close
+    elsif (id == Gosu::KbLeft) || (id == Gosu::GpLeft) || (id == Gosu::KbA)
+      @ruby.accelerate(:left)
+    elsif (id == Gosu::KbRight) || (id == Gosu::GpRight) || (id == Gosu::KbD)
+      @ruby.accelerate(:right)
+    elsif (id == Gosu::KbUp) || (id == Gosu::GpUp) || (id == Gosu::KbW)
+      @ruby.accelerate(:up)
+    elsif (id == Gosu::KbDown) || (id == Gosu::GpDown) || (id == Gosu::KbS)
+      @ruby.accelerate(:down)
     end
   end
 end

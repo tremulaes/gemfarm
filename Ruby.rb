@@ -2,89 +2,81 @@ require "gosu"
 
 
 class Ruby
+  attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
 
-attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
+  def initialize(window)
+    @window = window
+    @animation = Gosu::Image::load_tiles(window, "media/sprites/RubyDraft_SM.png", 16, 16, true)
+    @step_interval = 64
+    @down_anim = [@animation[0],@animation[1],@animation[2],@animation[3]]
+    @left_anim = [@animation[4],@animation[5],@animation[6],@animation[7]]
+    @up_anim = [@animation[8],@animation[9],@animation[10],@animation[11]]
+    @right_anim = [@animation[12],@animation[13],@animation[14],@animation[15]]
+    @direction = :down
+    @x = @y = @vel_x = @vel_y = 0
+    @expected_x, @expected_y = 0, 0
 
-    def initialize(window)
-        @window = window
-        @move_left = false
-        @move_right = false
-        @move_up = false
-        @move_down = false
+    @bubble_sound = Gosu::Sample.new(window, "media/bubble.wav")
+  end
 
-        @position_x = 300
-        @position_y = 300
+  def warp(x, y)
+    @x, @y = x, y
+  end
 
-        @walk_down_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_down_animation][:animation_arguments])
-        @walk_left_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_left_animation][:animation_arguments])
-        @walk_right_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_right_animation][:animation_arguments])
-        @walk_up_animation = SpriteAnimation.new(@window, *SPRITE_HASH[:walk_up_animation][:animation_arguments])
+  def accelerate(direction)
+    if (@vel_x == 0) && (@vel_y == 0)
+      @direction = direction
+      case @direction
+      when :up 
+        @vel_y = -2.5
+        @expected_y = (@y - @step_interval) % 640
+      when :down
+        @vel_y = 2.5
+        @expected_y = (@y + @step_interval) % 640
+      when :left 
+        @vel_x = -2.5
+        @expected_x = (@x - @step_interval) % 960
+      when :right
+        @vel_x = 2.5
+        @expected_x = (@x + @step_interval) % 960
+      end
+    else 
+      @bubble_sound.play
     end
+  end
 
-    def update
-
-        if @move_down
-             step(0, 64)
-            @walk_down_animation.update
-        elsif @move_left
-             step(-64, 0)
-            @walk_left_animation.update
-        elsif @move_right
-             step(64, 0)
-            @walk_right_animation.update
-        elsif @move_up
-             step(0, -64)
-            @walk_up_animation.update
-        end
-    
-
+  def move
+    case @direction
+    when :up 
+      @y += @vel_y
+      @vel_y = 0 if @y <= @expected_y
+      @vel_x = 0
+    when :down
+      @y += @vel_y
+      @vel_y = 0 if @y >= @expected_y
+      @vel_x = 0
+    when :left
+      @x += @vel_x
+      @vel_x = 0 if @x <= @expected_x
+      @vel_y= 0
+    when :right
+      @x += @vel_x
+      @vel_x = 0 if @x >= @expected_x
+      @vel_y = 0
     end
+    @x %= 960
+    @y %= 640
+  end
 
-    def step(x, y)
-
-        @new_position_y = @position_y + y
-        @new_position_x = @position_x + x
-        puts "new positions = " + @position_x.to_s + ", " + @position_y.to_s
-
-        if x < 0
-            while @position_x > @new_position_x + x
-                puts "position x = " + @position_x.to_s             
-                @position_x = @position_x - 1
-            end
-        elsif y < 0 #move up
-            while @position_y >= @new_position_y + y
-                puts "position y = " + @position_y.to_s
-                puts y
-                @position_y = @position_y - 1
-            end
-        elsif y > 0
-            while @position_y < @new_position_y + y
-                @position_y = @position_y + 1
-                puts "posotion y = " + @position_y.to_s
-                puts y
-            end
-        elsif x > 0 
-            while @position_x < @new_position_x + x
-                puts "position x = " + @position_x.to_s
-                @position_x = @position_x + 1
-            end
-        end
-
-        @move_up = false
-        @move_down = false
-        @move_right = false
-        @move_left = false
+  def draw
+    cur_anim = 
+    case @direction
+    when :right then @right_anim
+    when :left then @left_anim
+    when :up then @up_anim
+    when :down then @down_anim
     end
-
-    def draw
-        if @move_down
-         @walk_down_animation.draw(position_x, position_y, 1, 4, 4)
-        elsif @move_left
-         @walk_left_animation.draw(position_x, position_y, 1, 4, 4)
-        elsif @move_right
-          @walk_right_animation.draw(position_x, position_y, 1, 4, 4)
-        elsif @move_up
-          @walk_up_animation.draw(position_x, position_y, 1, 4, 4)
-        end
-    end
+    img = cur_anim[Gosu::milliseconds / 200 % cur_anim.size]
+    img.draw(@x - img.width, @y - img.height, 2, 4, 4)
+  end
 end
