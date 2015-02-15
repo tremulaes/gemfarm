@@ -1,11 +1,13 @@
 require "gosu"
 
 class Ruby
-  attr_reader :direction, :vel_x, :vel_y
-
+  attr_reader :direction, :vel_x, :vel_y, :facing_tile
+  attr_accessor :energy
+  
   def initialize(window, map)
     @window = window
     @map = map
+    @energy = 5
     @animation = Gosu::Image::load_tiles(window, "media/sprites/ruby.png", 16, 16, true)
     @down_anim = [@animation[0],@animation[1],@animation[2],@animation[3]]
     @left_anim = [@animation[4],@animation[5],@animation[6],@animation[7]]
@@ -16,6 +18,7 @@ class Ruby
     @current_tile = @map.tile_at(@x, @y)
     @expected_tile = @current_tile
     @facing_tile
+    @cur_frame = @down_anim[0]
   end
 
   def warp(x, y)
@@ -83,7 +86,7 @@ class Ruby
     end
   end
 
-  def draw
+  def draw(move = true)
     cur_anim = 
     case @direction
     when :right then @right_anim
@@ -91,7 +94,12 @@ class Ruby
     when :up then @up_anim
     when :down then @down_anim
     end
-    img = cur_anim[Gosu::milliseconds / 200 % cur_anim.size]
+    if move
+      img = cur_anim[Gosu::milliseconds / 200 % cur_anim.size]
+      @cur_frame = img
+    else
+      img = @cur_frame
+    end
     img.draw(@x, @y, 2, 4, 4)
   end
 end

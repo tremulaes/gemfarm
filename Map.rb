@@ -4,10 +4,11 @@ require_relative 'Tile'
 class Map
   attr_reader :tile_array, :crop_array
 
-  def initialize(window, array)
+  def initialize(window, menu, array)
     @map_array = array
     @scale = 4
     @window = window
+    @menu = menu
     @tileset = Gosu::Image::load_tiles(window, "media/tileset/map_tileset.png", 16, 16, true)
     @tile_array = Array.new(10) { Array.new(15) }
     set_tiles
@@ -22,6 +23,7 @@ class Map
           y: y_index * 64,
           collidable: MAP_COLL.include?(cell),
           img: @tileset[cell],
+          menu: @menu,
           id: cell,
           map: self
         }
