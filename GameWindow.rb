@@ -20,27 +20,28 @@ class GameWindow < Gosu::Window
 
   def update
     if button_down? Gosu::KbUp or button_down? Gosu::GpUp or button_down? Gosu::KbW
-      ruby.move_up = true
-      ruby.step(0, 64)
+      @ruby.move_up = true
+      @ruby.step(0, 64)
     end
 
     if button_down? Gosu::KbLeft or button_down? Gosu::GpLeft or button_down? Gosu::KbA
-      ruby.move_left = true
-      ruby.step(-64, 0)
+      @ruby.move_left = true
+      @ruby.step(-64, 0)
     end
 
     if button_down? Gosu::KbRight or button_down? Gosu::GpRight or button_down? Gosu::KbD
-      ruby.move_right = true
-      ruby.step(64, 0)
+      @ruby.move_right = true
+      @ruby.step(64, 0)
     end
 
     if button_down? Gosu::KbDown or button_down? Gosu::GpDown or button_down? Gosu::KbS
-      ruby.move_down = true
-      ruby.step(0, -64)
+      @ruby.move_down = true
+      @ruby.step(0, -64)
     end
 
     if button_down? Gosu::KbUp or button_down? Gosu::GpUp or button_down? Gosu::KbW
-      ruby.ruby.move_down = true
+      @ruby.move_down = true
+      @ruby.step(0, 64)
     end
 
   end

@@ -4,7 +4,7 @@ require "gosu"
 
 class Ruby
 
-attr_reader :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
+attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
 
     def initialize(window)
         @window = window
@@ -23,7 +23,7 @@ attr_reader :move_up, :move_left, :move_right, :move_down, :position_x, :positio
     end
 
     def update
-        
+
     if @ruby.move_down
      @walk_down_animation.update
     elsif @ruby.move_left
