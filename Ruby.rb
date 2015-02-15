@@ -1,9 +1,6 @@
 require "gosu"
 
-
 class Ruby
-  attr_accessor :move_up, :move_left, :move_right, :move_down, :position_x, :position_y
-
   def initialize(window)
     @window = window
     @animation = Gosu::Image::load_tiles(window, "media/sprites/RubyDraft_SM.png", 16, 16, true)
@@ -15,8 +12,6 @@ class Ruby
     @direction = :down
     @x = @y = @vel_x = @vel_y = 0
     @expected_x, @expected_y = 0, 0
-
-    @bubble_sound = Gosu::Sample.new(window, "media/bubble.wav")
   end
 
   def warp(x, y)
@@ -40,8 +35,6 @@ class Ruby
         @vel_x = 2.5
         @expected_x = (@x + @step_interval) % 960
       end
-    else 
-      @bubble_sound.play
     end
   end
 

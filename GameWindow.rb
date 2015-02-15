@@ -1,6 +1,4 @@
 require 'gosu'
-require_relative "sprite_data"
-require_relative 'SpriteAnimation'
 require_relative 'Ruby'
 require_relative 'map'
 
@@ -10,26 +8,13 @@ class GameWindow < Gosu::Window
     self.caption = 'Gem Farm'
     @ruby = Ruby.new(self)
     @map = Map.new(self, MAP_ARRAY)
+    @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
+    @background_music.play(true)
+
     @ruby.warp(400,300)
   end
 
   def update
-    # if button_down(Gosu::KbUp) || button_down(Gosu::GpUp) || button_down(Gosu::KbW)
-    #   @ruby.accelerate(:up)
-    # end
-
-    # if button_down(Gosu::KbLeft) || button_down(Gosu::GpLeft) || button_down(Gosu::KbA)
-    #   @ruby.accelerate(:left)
-    # end
-
-    # if button_down(Gosu::KbRight) || button_down(Gosu::GpRight) || button_down(Gosu::KbD)
-    #   @ruby.accelerate(:right)
-    # end
-
-    # if button_down(Gosu::KbDown) || button_down(Gosu::GpDown) || button_down(Gosu::KbS)
-    #   @ruby.accelerate(:down)
-    # end
-
     @ruby.move
   end
 
