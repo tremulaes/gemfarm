@@ -38,5 +38,11 @@ class Tile
 
 	def draw
 		@img.draw(@x, @y, 0, 4, 4)
+		@holding.draw if @holding
+	end
+
+	def draw2(x, y)
+		@img.draw(x, y, 0, 4, 4)
+		@holding.draw2(x, y) if @holding
 	end
 end

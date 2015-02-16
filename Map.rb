@@ -1,4 +1,4 @@
-require_relative 'mapdata'
+require_relative 'MapData'
 require_relative 'Tile'
 
 class Map
@@ -10,9 +10,12 @@ class Map
     @window = window
     @menu = menu
     @tileset = Gosu::Image::load_tiles(window, "media/tileset/map_tileset.png", 16, 16, true)
-    @tile_array = Array.new(10) { Array.new(15) }
+    @tile_array = Array.new(@map_array.size) { Array.new(@map_array[0].size) }
     set_tiles
     @crop_array = []
+    @show_tiles = Array.new(13) { Array.new(13) }
+    @h = @tile_array.size
+    @w = @tile_array[0].size
   end
 
   def set_tiles
@@ -53,6 +56,25 @@ class Map
 
   def tile_at(x, y)
     @tile_array[y / 64][x / 64]
+  end
+
+  def show_tiles(x,y)
+    calc_show_tiles(x,y)
+    @show_tiles
+  end
+
+  def calc_show_tiles(x, y)
+    x1 = tile_at(x, y).x / 64
+    y1 = tile_at(x, y).y / 64
+    x_slice = ((x1 - 6)..(x1 + 6)).to_a
+    y_slice = ((y1 - 6)..(y1 + 6)).to_a
+    x_slice.map! { |i| i < 0 || i + 1 > @w ? i = nil : i }
+    y_slice.map! { |i| i < 0 || i + 1 > @h ? i = nil : i }
+    y_slice.each_with_index do |yline, yind|
+      x_slice.each_with_index do |xrow, xind|
+        @show_tiles[yind][xind] = [xrow, yline]
+      end
+    end
   end
 
   def draw

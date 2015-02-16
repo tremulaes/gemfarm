@@ -1,34 +1,60 @@
 require 'gosu'
 require_relative 'Ruby'
 require_relative 'Map'
+require_relative 'MapGenerate'
 require_relative 'Crop'
 require_relative 'Menu'
 require_relative 'Message'
 require_relative 'InterfaceSound'
+require_relative 'Camera'
 
 class GameWindow < Gosu::Window
-  attr_reader :map, :ruby
+  attr_reader :map, :map_id, :ruby
   include InterfaceSound
+  include MapGenerate
 
   def initialize
-    super(960, 640, false)
+    super(704, 704, false)
     self.caption = 'Gem Farm'
     @message = Message.new(self)
     @menu = Menu.new(self, @message)
-    load_sounds
-    @map = Map.new(self, @menu, MAP_ARRAY)
+    generate_maps
+    @map = @maps[:home][0]
+    @map_id = :home
     @ruby = Ruby.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
-    # @background_music.volume = 0.25
+    load_sounds
     @ruby.warp(400,300)
-    @crops = @map.crop_array
+    @map.calc_show_tiles(@ruby.x,@ruby.y)
+    @camera = Camera.new(self, @map)
   end
 
   def update
     input_calc
-    @crops = @map.crop_array
+    @camera.update(@ruby.x, @ruby.y)
+    @viewport = @map.show_tiles(@ruby.x,@ruby.y)
     @ruby.move
+  end
+
+  def draw
+    # @map.draw
+      @camera.draw(@viewport,@map.tile_array)
+    if @menu.show != :false || @message.show == :true
+      # @ruby.draw(false)
+      @ruby.draw2(false)
+      @menu.draw
+      @message.draw
+    else
+      # @ruby.draw
+      @ruby.draw2
+    end
+  end
+
+  def change_map(map_id)
+    @map = @maps[map_id][0]
+    @map_id = map_id
+    @ruby.map = @map
   end
 
   def input_calc
@@ -47,19 +73,6 @@ class GameWindow < Gosu::Window
     end
   end
 
-  def draw
-    @map.draw
-    if @menu.show != :false || @message.show == :true
-      @ruby.draw(false)
-      @crops.each {|crop| crop.draw(false) }
-      @menu.draw
-      @message.draw
-    else
-      @ruby.draw
-      @crops.each {|crop| crop.draw }
-    end
-  end
-
   def button_down(id)
     if @ruby.vel_x == 0 && @ruby.vel_y == 0
       case id
@@ -73,7 +86,6 @@ class GameWindow < Gosu::Window
             @message.interact
           else
             if @menu.show == :true
-              # fx(:open_menu)
               @menu.interact
             else
               @ruby.interact

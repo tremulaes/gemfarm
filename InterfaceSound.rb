@@ -39,7 +39,7 @@ module InterfaceSound
         @fx_reject.play(@fx_vol)
         @fx_interval = 0
       when :text
-        @fx_scrolling_text.play(@fx_vol * 0.5)
+        @fx_scrolling_text.play(@fx_vol * 0.8)
         @fx_interval = 1100
       end
       @fx_start_time = Gosu::milliseconds

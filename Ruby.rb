@@ -1,8 +1,8 @@
 require "gosu"
 
 class Ruby
-  attr_reader :direction, :vel_x, :vel_y, :facing_tile
-  attr_accessor :energy
+  attr_reader :direction, :vel_x, :vel_y, :facing_tile, :x, :y
+  attr_accessor :energy, :map
   
   def initialize(window, map)
     @window = window
@@ -117,5 +117,22 @@ class Ruby
       img = @cur_frame
     end
     img.draw(@x, @y, 2, 4, 4)
+  end
+
+  def draw2(move = true)
+    cur_anim = 
+    case @direction
+    when :right then @right_anim
+    when :left then @left_anim
+    when :up then @up_anim
+    when :down then @down_anim
+    end
+    if move
+      img = cur_anim[Gosu::milliseconds / 200 % cur_anim.size]
+      @cur_frame = img
+    else
+      img = @cur_frame
+    end
+    img.draw(320, 320, 2, 4, 4)
   end
 end

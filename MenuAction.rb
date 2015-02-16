@@ -3,6 +3,7 @@ module MenuAction
     crop = arg_hash[:crop] ||= nil
     tile = arg_hash[:tile] ||= nil
     energy = arg_hash[:energy] ||= nil
+    map_id = arg_hash[:map_id] ||= nil
     case action
     when :cancel
       @window.fx(:close_menu)
@@ -24,7 +25,7 @@ module MenuAction
       crop.grow
     when :kick
       crop.die
-      @message.text = "You are an asshole you killed the crop"
+      @message.text = "You are an meanie you killed the crop"
     when :plant
       @window.fx(:accept)
       tile.new_plant
@@ -33,6 +34,13 @@ module MenuAction
       @message.text = "you are a lonely farmer and sit laughing by yourself until you cry it is really sad"
     when :dance
       @message.text = "you danced with the crop but it's really hard to say why you would think that's a good idea."
+    when :warp
+      @message.text = "Yyou find yourself in a strange land."
+      if @window.map_id == :home
+        @window.change_map(:big)
+      else
+        @window.change_map(:home)
+      end
     end
     self.show = :false if self.show != :continue
   end
@@ -53,6 +61,9 @@ module MenuAction
     end
     if key_array.include?(:energy)
       @menu_act_hash[:energy] = @window.ruby.energy
+    end
+    if key_array.include?(:warp)
+      @menu_act_hash[:map] = @window.map_id
     end
   end
 end

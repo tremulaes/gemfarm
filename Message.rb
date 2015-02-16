@@ -3,9 +3,9 @@ class Message
 
   def initialize(window)
     @window = window
-    @x, @y, @w, @h, @b = 0, 500, 960, 140, 5
+    @x, @y, @w, @h, @b = 0, 590, 704, 114, 5
     @black, @white = 0xff000000, 0xffffffff
-    @font = Gosu::Font.new(@window, "Courier", 15)
+    @font = Gosu::Font.new(@window, "Courier", 12)
     @text = ""
     @line_array = []
     @show_line = []
@@ -32,8 +32,8 @@ class Message
   end
 
   def line_slicer(new_text)
-    while new_text.size >= 34
-      l_index = new_text.slice(0..33).rindex(" ")
+    while new_text.size >= 27
+      l_index = new_text.slice(0..26).rindex(" ")
       @line_array << new_text.slice!(0..l_index)
     end
     @line_array << new_text
@@ -102,7 +102,7 @@ class Message
       @window.draw_quad(@x + @b, @y + @b, @white, @x + @w - @b, @y + @b, @white, @x + @b, @y + @h - @b, @white, @x + @w - @b, @y + @h - @b, @white, 5) # white box
       fill_text
       @print_text.each_with_index do |line, index|
-        @font.draw("#{line}", @x + 35 , @y + 10 + (index * 64), 6, 4.0, 4.0, @black)
+        @font.draw("#{line}", @x + 35 , @y + 10 + (index * 52), 6, 4.0, 4.0, @black)
       end
       if @next_line && @waiting
         if Gosu::milliseconds / 200 % 4 <= 1
