@@ -40,6 +40,12 @@ class Map
     @crop_array << tile_at(crop_hash[:x], crop_hash[:y]).holding
   end
 
+  def crop_die(x,y)
+    crop_object_id = tile_at(x,y).holding.object_id
+    tile_at(x,y).holding = nil
+    @crop_array.delete_if {|crop| crop.object_id == crop_object_id }
+  end
+
   def tile_num_at(x, y)
     coords = [x / 64, y / 64]
     coords

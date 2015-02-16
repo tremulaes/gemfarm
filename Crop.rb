@@ -26,7 +26,8 @@ class Crop
     @stage >= 3 ? @stage = 0 : @stage += 1
   end
 
-  def laugh
+  def die
+    @map.crop_die(@x, @y)
   end
 
   def draw(move = true)

@@ -3,6 +3,7 @@ require_relative 'Ruby'
 require_relative 'Map'
 require_relative 'Crop'
 require_relative 'Menu'
+require_relative 'Message'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :ruby
@@ -10,7 +11,8 @@ class GameWindow < Gosu::Window
     super(960, 640, false)
     self.caption = 'Gem Farm'
     @field_menu = [{ energy: "Energy: 5" }, { hello: "Hello" }]
-    @menu = Menu.new(self, @field_menu) 
+    @message = Message.new(self)
+    @menu = Menu.new(self, @message, @field_menu)
     @map = Map.new(self, @menu, MAP_ARRAY)
     @ruby = Ruby.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
@@ -27,7 +29,7 @@ class GameWindow < Gosu::Window
   end
 
   def input_calc
-    if !@menu.show
+    if !@menu.show && !@message.show
       if @ruby.vel_x == 0 && @ruby.vel_y == 0
         if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?( Gosu::KbA))
           @ruby.accelerate(:left)
@@ -44,10 +46,11 @@ class GameWindow < Gosu::Window
 
   def draw
     @map.draw
-    if @menu.show
+    if @menu.show || @message.show
       @ruby.draw(false)
       @crops.each {|crop| crop.draw(false) }
       @menu.draw
+      @message.draw
     else
       @ruby.draw
       @crops.each {|crop| crop.draw }
@@ -60,16 +63,22 @@ class GameWindow < Gosu::Window
       when Gosu::KbEscape
         close
       when Gosu::KbZ
-        if @menu.show
-          @menu.interact
+        if @message.show
+          @message.interact
         else
-          @ruby.interact
+          if @menu.show
+            @menu.interact
+          else
+            @ruby.interact
+          end
         end
       when Gosu::KbX
-        if @menu.show
-          @menu.show = false
-        else
-          @menu.items = @field_menu
+        if !@message.show
+          if @menu.show
+            @menu.show = false
+          else
+            @menu.items = @field_menu
+          end
         end
       when Gosu::KbUp
         if @menu.show
