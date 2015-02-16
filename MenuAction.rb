@@ -5,23 +5,28 @@ module MenuAction
     energy = arg_hash[:energy] ||= nil
     case action
     when :cancel
+      @window.fx(:close_menu)
       close_menu
     when :exit
       self.items = EXIT_CONFIRM_MENU
       @message.text = "Are you sure you want to leave?"
       self.show = :continue
     when :exit_yes
+      @window.fx(:accept)
       @window.close_game
     when :exit_no
+      @window.fx(:reject)
       close_menu
     when :energy
       @message.text = "You have #{energy} left today."
     when :water
+      @window.fx(:bubble)
       crop.grow
     when :kick
       crop.die
       @message.text = "You are an asshole you killed the crop"
     when :plant
+      @window.fx(:accept)
       tile.new_plant
       @message.text = "You planted SAPPHIRE CORN"
     when :laugh

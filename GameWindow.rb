@@ -4,19 +4,23 @@ require_relative 'Map'
 require_relative 'Crop'
 require_relative 'Menu'
 require_relative 'Message'
+require_relative 'InterfaceSound'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :ruby
+  include InterfaceSound
+
   def initialize
     super(960, 640, false)
     self.caption = 'Gem Farm'
     @message = Message.new(self)
     @menu = Menu.new(self, @message)
+    load_sounds
     @map = Map.new(self, @menu, MAP_ARRAY)
     @ruby = Ruby.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
-    @background_music.volume = 0.25
+    # @background_music.volume = 0.25
     @ruby.warp(400,300)
     @crops = @map.crop_array
   end
@@ -30,13 +34,13 @@ class GameWindow < Gosu::Window
   def input_calc
     if @menu.show == :false && @message.show == :false
       if @ruby.vel_x == 0 && @ruby.vel_y == 0
-        if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?( Gosu::KbA))
+        if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?(Gosu::KbA))
           @ruby.accelerate(:left)
-        elsif (button_down?(Gosu::KbRight) || button_down?(Gosu::GpRight) || button_down?( Gosu::KbD))
+        elsif (button_down?(Gosu::KbRight) || button_down?(Gosu::GpRight) || button_down?(Gosu::KbD))
           @ruby.accelerate(:right)
-        elsif (button_down?(Gosu::KbUp) || button_down?(Gosu::GpUp) || button_down?( Gosu::KbW))
+        elsif (button_down?(Gosu::KbUp) || button_down?(Gosu::GpUp) || button_down?(Gosu::KbW))
           @ruby.accelerate(:up)
-        elsif (button_down?(Gosu::KbDown) || button_down?(Gosu::GpDown) || button_down?( Gosu::KbS))
+        elsif (button_down?(Gosu::KbDown) || button_down?(Gosu::GpDown) || button_down?(Gosu::KbS))
           @ruby.accelerate(:down)
         end
       end
@@ -69,6 +73,7 @@ class GameWindow < Gosu::Window
             @message.interact
           else
             if @menu.show == :true
+              # fx(:open_menu)
               @menu.interact
             else
               @ruby.interact
@@ -78,8 +83,10 @@ class GameWindow < Gosu::Window
       when Gosu::KbX
         if @message.show == :false
           if @menu.show == :true
+            fx(:close_menu)
             @menu.show = :false
           else
+            fx(:open_menu)
             @menu.items = MAP_SCREEN_MENU
           end
         end

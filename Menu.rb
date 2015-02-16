@@ -1,4 +1,5 @@
 require_relative 'MenuAction'
+require_relative 'InterfaceSound'
 
 CROP_MENU = [{ water: "Water"}, { dance: "Dance"}, { kick: "Kick" }]
 EMPTY_FIELD_MENU = [{ plant: "Plant"}]
@@ -6,8 +7,8 @@ MAP_SCREEN_MENU = [{ energy: "Check Energy" }, { laugh: "Laugh" }, { exit: "Exit
 EXIT_CONFIRM_MENU = [{ exit_yes: "Yes"}, exit_no: "No"]
 
 class Menu
-  attr_accessor :show, :cursor
   include MenuAction
+  attr_accessor :show, :cursor
 
   def initialize(window, message)
     @window, @message = window, message

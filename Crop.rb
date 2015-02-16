@@ -7,7 +7,6 @@ class Crop
     @window = crop_hash[:window]
     @menu = crop_hash[:menu]
     @stage = 0
-    @bubble_sound = Gosu::Sample.new(@window, "media/bubble.wav")
     @animation = Gosu::Image::load_tiles(@window, "media/sprites/sapphire_corn.png", 16, 16, true)
     @anim0 = [@animation[0],@animation[1]]
     @anim1 = [@animation[2],@animation[3]]
@@ -22,7 +21,6 @@ class Crop
   end
 
   def grow
-    @bubble_sound.play
     @stage >= 3 ? @stage = 0 : @stage += 1
   end
 

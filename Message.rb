@@ -40,19 +40,6 @@ class Message
   end
 
   def interact
-    # if @show_line.size > 1
-    #   if @print_text[1].size < @show_line[1].size
-    #     @print_text = @show_line.clone
-    #   else
-    #     move_line
-    #   end
-    # else
-    #   if @print_text[0].size < @show_line[0].size
-    #     @print_text = @show_line.clone
-    #   else
-    #     move_line
-    #   end
-    # end
     if !@waiting
       @print_text = @show_line.clone
     else
@@ -92,11 +79,13 @@ class Message
     if @print_text[0].size < @show_line[0].size
       @print_text[0] << @show_line[0][@p_index[0]]
       @p_index[0] += 1
+      @window.fx(:text)
     else
       if @show_line.size > 1
         if @print_text[1].size < @show_line[1].size
           @print_text[1] << @show_line[1][@p_index[1]]
           @p_index[1] += 1
+          @window.fx(:text)
         end
       end
     end

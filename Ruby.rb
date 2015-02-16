@@ -36,16 +36,32 @@ class Ruby
     case direction
     when :up
       @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
-      @vel_y = -2.5 if !@expected_tile.collidable?
+      if @expected_tile.collidable?
+        @window.fx(:collision)
+      else
+        @vel_y = -2.5 
+      end
     when :down
       @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
-      @vel_y = 2.5 if !@expected_tile.collidable?
+      if @expected_tile.collidable?
+        @window.fx(:collision)
+      else
+        @vel_y = 2.5 
+      end
     when :left
       @expected_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
-      @vel_x = -2.5 if !@expected_tile.collidable?
+      if @expected_tile.collidable?
+        @window.fx(:collision)
+      else
+        @vel_x = -2.5 
+      end
     when :right
       @expected_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
-      @vel_x = 2.5 if !@expected_tile.collidable?
+      if @expected_tile.collidable?
+        @window.fx(:collision)
+      else
+        @vel_x = 2.5 
+      end
     end
   end
 
