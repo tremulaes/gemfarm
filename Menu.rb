@@ -48,7 +48,7 @@ class Menu
 
   def items=(array)
     @items = []
-    array.each {|item_hash| @items << item_hash}
+    array.each {|item_hash| @items << item_hash }
     @items << { cancel: "Cancel" }
     calc_menu_act_hash
     @cursor = 0
@@ -57,15 +57,7 @@ class Menu
   end
 
   def calc_dimen
-    @h =
-      case @items.size
-      when 1 then 74
-      when 2 then 138
-      when 3 then 202
-      when 4 then 266
-      when 5 then 330
-      when 6 then 394
-      end
+    @h = @items.size * 64 + 10
     long = @items.max_by {|item| item.values[0].size }
     @w = long.values[0].size * 26 + 40
     @x = 880 - @w

@@ -62,7 +62,7 @@ class GameWindow < Gosu::Window
       when Gosu::KbEscape
         close_game
       when Gosu::KbZ
-        if @menu.show == :continue 
+        if @menu.show == :continue
           @menu.interact
         else
           if @message.show == :true
