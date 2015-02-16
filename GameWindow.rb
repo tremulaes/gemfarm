@@ -9,7 +9,7 @@ require_relative 'InterfaceSound'
 require_relative 'Camera'
 
 class GameWindow < Gosu::Window
-  attr_reader :map, :map_id, :ruby
+  attr_reader :map, :map_id, :ruby, :waiting
   include InterfaceSound
   include MapGenerate
 
@@ -25,36 +25,64 @@ class GameWindow < Gosu::Window
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @ruby.warp(400,300)
+    @ruby.warp(5,6)
     @map.calc_show_tiles(@ruby.x,@ruby.y)
     @camera = Camera.new(self, @map)
+    @timer = 0
+    @waiting = false
   end
 
   def update
-    input_calc
-    @camera.update(@ruby.x, @ruby.y)
-    @viewport = @map.show_tiles(@ruby.x,@ruby.y)
-    @ruby.move
+    # time_tick
+    # if !@waiting
+      input_calc
+      @camera.update(@ruby.x, @ruby.y)
+      @viewport = @map.show_tiles(@ruby.x,@ruby.y)
+      @ruby.move
+      @menu.update
+    # else
+    #   @camera.update(@ruby.x, @ruby.y)
+    # end
   end
 
   def draw
-    # @map.draw
-      @camera.draw(@viewport,@map.tile_array)
+    @camera.draw(@viewport, @map.tile_array)
     if @menu.show != :false || @message.show == :true
-      # @ruby.draw(false)
       @ruby.draw2(false)
       @menu.draw
       @message.draw
     else
-      # @ruby.draw
       @ruby.draw2
     end
   end
 
-  def change_map(map_id)
+  def effect(effect)
+    @camera.effect(effect)
+  end
+
+  def set_timer(frames)
+    @timer = frames
+  end
+
+  def time_tick
+    if @timer > 0
+      @waiting = true
+      @timer -= 1  
+    else
+      @waiting = false
+    end
+  end
+
+  def change_map(map_id, warp = [])
     @map = @maps[map_id][0]
     @map_id = map_id
     @ruby.map = @map
+    if warp == []
+      x, y = @maps[map_id][1][0], @maps[map_id][1][1]
+    else
+      x, y = warp[0], warp[1]
+    end
+    @ruby.warp(x, y)
   end
 
   def input_calc

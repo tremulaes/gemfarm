@@ -59,20 +59,22 @@ class Message
   end
 
   def fill_text
-    fill_prints if Gosu::milliseconds / 50 % 2 == 0
-    if @show_line.size > 1
-      if @print_text[1].size < @show_line[1].size
-        @waiting = false
+    # if !@window.waiting
+      fill_prints if Gosu::milliseconds / 50 % 2 == 0
+      if @show_line.size > 1
+        if @print_text[1].size < @show_line[1].size
+          @waiting = false
+        else
+          @waiting = true
+        end
       else
-        @waiting = true
+        if @print_text[0].size < @show_line[0].size
+          @waiting = false
+        else
+          @waiting = true
+        end
       end
-    else
-      if @print_text[0].size < @show_line[0].size
-        @waiting = false
-      else
-        @waiting = true
-      end
-    end
+    # end
   end
 
   def fill_prints

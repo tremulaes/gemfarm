@@ -77,11 +77,11 @@ class Map
     end
   end
 
-  def draw
-    @tile_array.each_with_index do |subarray, y_index|
-      subarray.each_with_index do |cell, x_index|
-        @tile_array[y_index][x_index].draw
-      end
-    end
-  end
+  # def draw
+  #   @tile_array.each_with_index do |subarray, y_index|
+  #     subarray.each_with_index do |cell, x_index|
+  #       @tile_array[y_index][x_index].draw
+  #     end
+  #   end
+  # end
 end

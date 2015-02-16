@@ -22,7 +22,7 @@ class Ruby
   end
 
   def warp(x, y)
-    @x, @y = @map.tile_at(x, y).x, @map.tile_at(x, y).y
+    @x, @y = @map.tile_at(x * 64, y * 64).x, @map.tile_at(x * 64, y * 64).y
     @current_tile = @map.tile_at(@x, @y)
     @expected_tile = @current_tile
   end

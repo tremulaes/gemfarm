@@ -12,15 +12,22 @@ class Menu
 
   def initialize(window, message)
     @window, @message = window, message
+    @font = Gosu::Font.new(@window, "Courier", 12)
     @items = MAP_SCREEN_MENU
     @menu_act_hash = {}
     @x, @y, @w, @h, @b = 0, 96, 0, 0, 5
     calc_dimen
-    @show = :false
-    @font = Gosu::Font.new(@window, "Courier", 12)
     @black = 0xff000000 # black
     @white = 0xffffffff # white
     @cursor = 0
+    @show = :false
+    @action = :none
+  end
+
+  def update
+    if @action != :none
+      menu_act(@action, @menu_act_hash)
+    end
   end
 
   def move_up
@@ -41,7 +48,11 @@ class Menu
 
   def interact
     action = @items[cursor].keys[0]
-    menu_act(action, @menu_act_hash)
+    # puts "@action: #{@action}, action: #{action}"
+    if @action == :none
+      @action = action
+      # puts "@action: #{@action}, action: #{action}"
+    end
   end
 
   def items=(array)
