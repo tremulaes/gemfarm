@@ -10,9 +10,8 @@ class GameWindow < Gosu::Window
   def initialize
     super(960, 640, false)
     self.caption = 'Gem Farm'
-    @field_menu = [{ energy: "Energy: 5" }, { hello: "Hello" }]
     @message = Message.new(self)
-    @menu = Menu.new(self, @message, @field_menu)
+    @menu = Menu.new(self, @message)
     @map = Map.new(self, @menu, MAP_ARRAY)
     @ruby = Ruby.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
@@ -29,7 +28,7 @@ class GameWindow < Gosu::Window
   end
 
   def input_calc
-    if !@menu.show && !@message.show
+    if @menu.show == :false && @message.show == :false
       if @ruby.vel_x == 0 && @ruby.vel_y == 0
         if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?( Gosu::KbA))
           @ruby.accelerate(:left)
@@ -46,7 +45,7 @@ class GameWindow < Gosu::Window
 
   def draw
     @map.draw
-    if @menu.show || @message.show
+    if @menu.show != :false || @message.show == :true
       @ruby.draw(false)
       @crops.each {|crop| crop.draw(false) }
       @menu.draw
@@ -61,35 +60,43 @@ class GameWindow < Gosu::Window
     if @ruby.vel_x == 0 && @ruby.vel_y == 0
       case id
       when Gosu::KbEscape
-        close
+        close_game
       when Gosu::KbZ
-        if @message.show
-          @message.interact
+        if @menu.show == :continue 
+          @menu.interact
         else
-          if @menu.show
-            @menu.interact
+          if @message.show == :true
+            @message.interact
           else
-            @ruby.interact
+            if @menu.show == :true
+              @menu.interact
+            else
+              @ruby.interact
+            end
           end
         end
       when Gosu::KbX
-        if !@message.show
-          if @menu.show
-            @menu.show = false
+        if @message.show == :false
+          if @menu.show == :true
+            @menu.show = :false
           else
-            @menu.items = @field_menu
+            @menu.items = MAP_SCREEN_MENU
           end
         end
       when Gosu::KbUp
-        if @menu.show
+        if @menu.show != :false
           @menu.move_up
         end
       when Gosu::KbDown
-        if @menu.show
+        if @menu.show != :false
           @menu.move_down
         end
       end
     end
+  end
+
+  def close_game
+    close
   end
 end
 window = GameWindow.new

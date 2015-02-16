@@ -2,9 +2,20 @@ module MenuAction
   def menu_act(action, arg_hash)
     crop = arg_hash[:crop] ||= nil
     tile = arg_hash[:tile] ||= nil
+    energy = arg_hash[:energy] ||= nil
     case action
     when :cancel
-      self.show = false
+      close_menu
+    when :exit
+      self.items = EXIT_CONFIRM_MENU
+      @message.text = "Are you sure you want to leave?"
+      self.show = :continue
+    when :exit_yes
+      @window.close_game
+    when :exit_no
+      close_menu
+    when :energy
+      @message.text = "You have #{energy} left today."
     when :water
       crop.grow
     when :kick
@@ -14,9 +25,16 @@ module MenuAction
       tile.new_plant
       @message.text = "You planted SAPPHIRE CORN"
     when :laugh
-      @message.text = "you are a lonely farmer and sit laughing until you cry it is really sad"
+      @message.text = "you are a lonely farmer and sit laughing by yourself until you cry it is really sad"
+    when :dance
+      @message.text = "you danced with the crop but it's really hard to say why you would think that's a good idea."
     end
-    self.show = false
+    self.show = :false if self.show != :continue
+  end
+
+  def close_menu
+    self.show = :false
+    @message.show = :false
   end
 
   def calc_menu_act_hash
@@ -27,6 +45,9 @@ module MenuAction
     end
     if key_array.include?(:plant)
       @menu_act_hash[:tile] = @window.ruby.facing_tile
+    end
+    if key_array.include?(:energy)
+      @menu_act_hash[:energy] = @window.ruby.energy
     end
   end
 end

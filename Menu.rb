@@ -1,22 +1,24 @@
 require_relative 'MenuAction'
 
-CROP_MENU = [{ water: "Water"}, {laugh: "Laugh"}, {kick: "Kick"}]
-EMPTY_FIELD_MENU = [{ plant: "Plant"}, {dance: "Dance"}]
+CROP_MENU = [{ water: "Water"}, { dance: "Dance"}, { kick: "Kick" }]
+EMPTY_FIELD_MENU = [{ plant: "Plant"}]
+MAP_SCREEN_MENU = [{ energy: "Check Energy" }, { laugh: "Laugh" }, { exit: "Exit Game"}]
+EXIT_CONFIRM_MENU = [{ exit_yes: "Yes"}, exit_no: "No"]
 
 class Menu
   attr_accessor :show, :cursor
   include MenuAction
 
-  def initialize(window, message, menu_hash)
+  def initialize(window, message)
     @window, @message = window, message
-    @items = menu_hash
+    @items = MAP_SCREEN_MENU
     @menu_act_hash = {}
-    @h = 0
-    calc_height
-    @x, @y = 480, 170
     @w = 300
+    @h = 0
+    calc_dimen
+    @x, @y = 480, 170
     @b = 5
-    @show = false
+    @show = :false
     @font = Gosu::Font.new(@window, "Courier", 15)
     @black = 0xff000000 # black
     @white = 0xffffffff # white
@@ -50,11 +52,11 @@ class Menu
     @items << { cancel: "Cancel" }
     calc_menu_act_hash
     @cursor = 0
-    calc_height
-    @show = true
+    calc_dimen
+    @show = :true
   end
 
-  def calc_height
+  def calc_dimen
     @h =
       case @items.size
       when 1 then 74
@@ -64,10 +66,13 @@ class Menu
       when 5 then 330
       when 6 then 394
       end
+    long = @items.max_by {|item| item.values[0].size }
+    @w = long.values[0].size * 26 + 40
+    @x = 880 - @w
   end
 
   def draw
-    if @show
+    if @show == :true || @show == :continue
       @window.draw_quad(@x - @b, @y - @b, @black, @x + @w + @b, @y - @b, @black, @x - @b, @y + @h + @b, @black, @x + @w + @b, @y + @h + @b, @black, 4) #black box
       @window.draw_quad(@x, @y, @white, @x + @w, @y, @white, @x, @y + @h, @white, @x + @w, @y + @h, @white, 5) # white box
       @items.each_with_index do |hash, index|

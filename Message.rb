@@ -10,7 +10,7 @@ class Message
     @line_array = []
     @show_line = []
     @show_index
-    @show = false
+    @show = :false
     @next_line = false
   end
 
@@ -25,29 +25,29 @@ class Message
       @show_line = @line_array.clone
     end
     @show_index = 0
-    @show = true
+    @show = :true
   end
 
   def line_slicer(new_text)
     while new_text.size >= 34
-      @line_array << new_text.slice!(0..33)
+      l_index = new_text.slice(0..33).rindex(" ")
+      @line_array << new_text.slice!(0..l_index)
     end
     @line_array << new_text
   end
 
   def interact
-    puts "#{@next_line}: #{@show_line}"
     if @next_line
       @show_index += 1
       @show_line = @line_array[@show_index..@show_index + 1]
       @next_line = false if @line_array.size - @show_index <= 2
     else
-      @show = false
+      @show = :false
     end
   end
 
   def draw
-    if @show == true
+    if @show == :true
       @window.draw_quad(@x, @y, @black, @x + @w, @y, @black, @x, @y + @h, @black, @x + @w, @y + @h, @black, 4) #black box
       @window.draw_quad(@x + @b, @y + @b, @white, @x + @w - @b, @y + @b, @white, @x + @b, @y + @h - @b, @white, @x + @w - @b, @y + @h - @b, @white, 5) # white box
       @show_line.each_with_index do |line, index|

@@ -27,6 +27,7 @@ class Crop
   end
 
   def die
+    @map.tile_at(@x, @y).collidable = false
     @map.crop_die(@x, @y)
   end
 
