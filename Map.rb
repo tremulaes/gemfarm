@@ -2,17 +2,17 @@ require_relative 'MapData'
 require_relative 'Tile'
 
 class Map
-  attr_reader :tile_array, :crop_array
+  attr_reader :tile_array, :def_img
 
-  def initialize(window, menu, array)
+  def initialize(window, menu, array, *def_img_id)
     @map_array = array
     @scale = 4
     @window = window
     @menu = menu
     @tileset = Gosu::Image::load_tiles(window, "media/tileset/map_tileset.png", 16, 16, true)
+    @def_img = def_img_id[0] ? @tileset[def_img_id[0]] : nil
     @tile_array = Array.new(@map_array.size) { Array.new(@map_array[0].size) }
     set_tiles
-    @crop_array = []
     @show_tiles = Array.new(13) { Array.new(13) }
     @h = @tile_array.size
     @w = @tile_array[0].size
@@ -40,13 +40,11 @@ class Map
       crop_hash[:window] = @window
     end
     tile_at(crop_hash[:x], crop_hash[:y]).holding = Crop.new(crop_hash)
-    @crop_array << tile_at(crop_hash[:x], crop_hash[:y]).holding
   end
 
   def crop_die(x,y)
     crop_object_id = tile_at(x,y).holding.object_id
     tile_at(x,y).holding = nil
-    @crop_array.delete_if {|crop| crop.object_id == crop_object_id }
   end
 
   def tile_num_at(x, y)
@@ -76,12 +74,4 @@ class Map
       end
     end
   end
-
-  # def draw
-  #   @tile_array.each_with_index do |subarray, y_index|
-  #     subarray.each_with_index do |cell, x_index|
-  #       @tile_array[y_index][x_index].draw
-  #     end
-  #   end
-  # end
 end

@@ -43,11 +43,13 @@ class Camera
     end
   end
 
-  def draw(viewport,tile_array)
+  def draw(viewport, tile_array, def_img)
     viewport.each_with_index do |subarray, yind|
       subarray.each_with_index do |cell, xind|
         if cell[0] && cell[1]
           tile_array[cell[1]][cell[0]].draw(xind * 64 - @x - 128, yind * 64 - @y - 128)
+        elsif def_img
+          def_img.draw(xind * 64 - @x - 128, yind * 64 - @y - 128, 0, 4, 4)
         end
       end
     end

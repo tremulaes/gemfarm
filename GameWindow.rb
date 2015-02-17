@@ -46,7 +46,7 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @camera.draw(@viewport, @map.tile_array)
+    @camera.draw(@viewport, @map.tile_array, @map.def_img)
     if @menu.show != :false || @message.show == :true
       @ruby.draw(false)
       @menu.draw
