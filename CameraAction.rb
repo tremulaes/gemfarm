@@ -13,7 +13,6 @@ module CameraAction
       end
     else
       @queue << effect
-      puts "add to queue! #{effect}; #{@queue}"
     end
   end
 

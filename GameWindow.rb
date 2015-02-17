@@ -33,12 +33,12 @@ class GameWindow < Gosu::Window
   end
 
   def update
-    # time_tick
+    time_tick
+      @ruby.move
+      calc_viewport
     # if !@waiting
       input_calc
       @camera.update(@ruby.x, @ruby.y)
-      @viewport = @map.show_tiles(@ruby.x,@ruby.y)
-      @ruby.move
       @menu.update
     # else
     #   @camera.update(@ruby.x, @ruby.y)
@@ -48,11 +48,11 @@ class GameWindow < Gosu::Window
   def draw
     @camera.draw(@viewport, @map.tile_array)
     if @menu.show != :false || @message.show == :true
-      @ruby.draw2(false)
+      @ruby.draw(false)
       @menu.draw
       @message.draw
     else
-      @ruby.draw2
+      @ruby.draw
     end
   end
 
@@ -61,7 +61,7 @@ class GameWindow < Gosu::Window
   end
 
   def set_timer(frames)
-    @timer = frames
+    @timer += frames
   end
 
   def time_tick
@@ -71,6 +71,10 @@ class GameWindow < Gosu::Window
     else
       @waiting = false
     end
+  end
+
+  def calc_viewport
+    @viewport = @map.show_tiles(@ruby.x,@ruby.y)
   end
 
   def change_map(map_id, warp = [])
@@ -83,6 +87,7 @@ class GameWindow < Gosu::Window
       x, y = warp[0], warp[1]
     end
     @ruby.warp(x, y)
+    calc_viewport
   end
 
   def input_calc

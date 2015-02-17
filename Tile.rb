@@ -36,13 +36,8 @@ class Tile
 		@collidable
 	end
 
-	def draw
-		@img.draw(@x, @y, 0, 4, 4)
-		@holding.draw if @holding
-	end
-
-	def draw2(x, y)
+	def draw(x, y)
 		@img.draw(x, y, 0, 4, 4)
-		@holding.draw2(x, y) if @holding
+		@holding.draw(x, y) if @holding
 	end
 end

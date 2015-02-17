@@ -48,10 +48,8 @@ class Menu
 
   def interact
     action = @items[cursor].keys[0]
-    # puts "@action: #{@action}, action: #{action}"
     if @action == :none
       @action = action
-      # puts "@action: #{@action}, action: #{action}"
     end
   end
 

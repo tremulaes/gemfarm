@@ -24,10 +24,7 @@ class Camera
 
   def effect_timer
     if @effect == :none
-      if @queue.size > 0
-        effect(@queue.shift)
-        puts "should shift from queue: #{@queue}"
-      end
+      effect(@queue.shift) if @queue.size > 0
     else
       case @effect
       when :fade_out #26 ticks
@@ -46,11 +43,11 @@ class Camera
     end
   end
 
-  def draw(view_array,tile_array)
-    view_array.each_with_index do |subarray, yind|
+  def draw(viewport,tile_array)
+    viewport.each_with_index do |subarray, yind|
       subarray.each_with_index do |cell, xind|
         if cell[0] && cell[1]
-          tile_array[cell[1]][cell[0]].draw2(xind * 64 - @x - 128, yind * 64 - @y - 128)
+          tile_array[cell[1]][cell[0]].draw(xind * 64 - @x - 128, yind * 64 - @y - 128)
         end
       end
     end

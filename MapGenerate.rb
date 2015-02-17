@@ -5,7 +5,7 @@
 module MapGenerate
   def generate_maps
     @maps = { 
-      home: [Map.new(self, @menu, HOME_MAP_ARRAY),[7,5]],
+      home: [Map.new(self, @menu, HOME_MAP_ARRAY),[8,3]],
       big: [Map.new(self, @menu, BIG_MAP_ARRAY),[4,5]]
     }
   end

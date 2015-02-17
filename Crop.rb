@@ -29,24 +29,24 @@ class Crop
     @map.crop_die(@x, @y)
   end
 
-  def draw(move = true)
-    cur_anim =
-      case @stage
-      when 0 then @anim0
-      when 1 then @anim1
-      when 2 then @anim2
-      when 3 then @anim3
-      end 
-    if move
-      img = cur_anim[Gosu::milliseconds / 600 % @anim0.size]
-      @cur_frame = img
-    else
-      img = @cur_frame
-    end
-    img.draw(@x, @y, 2, 4, 4)
-  end
+  # def draw(move = true)
+  #   cur_anim =
+  #     case @stage
+  #     when 0 then @anim0
+  #     when 1 then @anim1
+  #     when 2 then @anim2
+  #     when 3 then @anim3
+  #     end 
+  #   if move
+  #     img = cur_anim[Gosu::milliseconds / 600 % @anim0.size]
+  #     @cur_frame = img
+  #   else
+  #     img = @cur_frame
+  #   end
+  #   img.draw(@x, @y, 2, 4, 4)
+  # end
 
-  def draw2(x,y, move = true)
+  def draw(x,y, move = true)
     cur_anim =
       case @stage
       when 0 then @anim0
