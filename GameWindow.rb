@@ -19,8 +19,8 @@ class GameWindow < Gosu::Window
     @message = Message.new(self)
     @menu = Menu.new(self, @message)
     generate_maps
-    @map = @maps[:home][0]
-    @map_id = :home
+    @map = @maps[:farm][0]
+    @map_id = :farm
     @ruby = Ruby.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)

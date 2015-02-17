@@ -40,18 +40,46 @@ module MenuAction
       @message.text = "You planted SAPPHIRE CORN"
       @action = :none
     when :warp
+      self.items = WARP_CONFIRM_MENU
+      @message.text = "Where would you like to go?"
+      @action = :none
+      self.show = :continue
+    when :warp_home
       if !@window.waiting
         @window.fx(:accept)
         @window.effect(:fade_out)
-        @action = :warp2
+        close_menu
+        @action = :warp_home2
       end
-    when :warp2
+    when :warp_home2
       if !@window.waiting
-        if @window.map_id == :home
-          @window.change_map(:big)
-        else
-          @window.change_map(:home)
-        end
+        @window.change_map(:home)
+        @window.effect(:fade_in)
+        @action = :none
+      end
+    when :warp_farm
+    if !@window.waiting
+      @window.fx(:accept)
+      @window.effect(:fade_out)
+      close_menu
+      @action = :warp_farm2
+    end
+    when :warp_farm2
+      if !@window.waiting
+        @window.change_map(:farm)
+        @window.effect(:fade_in)
+        @action = :none
+      end
+    when :warp_big
+      if !@window.waiting
+        @window.fx(:accept)
+        @window.effect(:fade_out)
+        close_menu
+        @action = :warp_big2
+      end
+    when :warp_big2
+      if !@window.waiting
+        @window.change_map(:big)
         @window.effect(:fade_in)
         @action = :none
       end
@@ -81,7 +109,7 @@ module MenuAction
       @menu_act_hash[:energy] = @window.ruby.energy
     end
     if key_array.include?(:warp)
-      @menu_act_hash[:map] = @window.map_id
+      @menu_act_hash[:map] = WARP_CONFIRM_MENU
     end
   end
 end
