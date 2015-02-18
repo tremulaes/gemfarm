@@ -29,7 +29,7 @@ module MenuAction
       @action = :none
     when :kick
       crop.die
-      @message.text = "You are an meanie you killed the crop"
+      @message.text = "You are a meanie you killed the crop"
       @action = :none
     when :laugh
       @message.text = "you are a lonely farmer and sit laughing by yourself until you cry it is really sad"
