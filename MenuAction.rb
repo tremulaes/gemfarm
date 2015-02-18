@@ -100,13 +100,13 @@ module MenuAction
     key_array = []
     @items.each {|item| key_array << item.keys[0]}
     if key_array.include?(:water) || key_array.include?(:kick)
-      @menu_act_hash[:crop] = @window.ruby.facing_tile.holding
+      @menu_act_hash[:crop] = @window.player.facing_tile.holding
     end
     if key_array.include?(:plant)
-      @menu_act_hash[:tile] = @window.ruby.facing_tile
+      @menu_act_hash[:tile] = @window.player.facing_tile
     end
     if key_array.include?(:energy)
-      @menu_act_hash[:energy] = @window.ruby.energy
+      @menu_act_hash[:energy] = @window.player.energy
     end
     if key_array.include?(:warp)
       @menu_act_hash[:map] = WARP_CONFIRM_MENU

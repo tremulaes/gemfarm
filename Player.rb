@@ -1,6 +1,6 @@
 require "gosu"
 
-class Ruby
+class Player
   attr_reader :direction, :vel_x, :vel_y, :facing_tile, :x, :y
   attr_accessor :energy, :map
   

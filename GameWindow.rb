@@ -1,17 +1,23 @@
+# @maps is a hash; key = map name, value is an array with relevant data
+# array[0] = map object
+# array[1] = default warp coordinates [x,y] format
+# array[2] = default image for outside tiles; default to nil if black is desired
+# array[2] = hash array for default object instantiation [{type: [x,y]}, {type: [x,y]}]
+
 require 'gosu'
-require_relative 'Ruby'
+require_relative 'Camera'
+require_relative 'Crop'
+require_relative 'InterfaceSound'
 require_relative 'Map'
 require_relative 'MapGenerate'
-require_relative 'Crop'
-require_relative 'Menu'
 require_relative 'Message'
-require_relative 'InterfaceSound'
-require_relative 'Camera'
+require_relative 'Menu'
+require_relative 'Player'
 
 class GameWindow < Gosu::Window
-  attr_reader :map, :map_id, :ruby, :waiting
+  attr_reader :map, :map_id, :player, :waiting
   include InterfaceSound
-  include MapGenerate
+  # include MapGenerate
 
   def initialize
     super(704, 704, false)
@@ -21,12 +27,12 @@ class GameWindow < Gosu::Window
     generate_maps
     @map = @maps[:farm][0]
     @map_id = :farm
-    @ruby = Ruby.new(self, @map)
+    @player = Player.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @ruby.warp(5,6)
-    @map.calc_show_tiles(@ruby.x,@ruby.y)
+    @player.warp(5,6)
+    @map.calc_show_tiles(@player.x,@player.y)
     @camera = Camera.new(self, @map)
     @timer = 0
     @waiting = false
@@ -35,21 +41,29 @@ class GameWindow < Gosu::Window
   def update
     time_tick
     calc_viewport
-    @camera.update(@ruby.x, @ruby.y)
+    @camera.update(@player.x, @player.y)
     @menu.update
     input_calc
-    @ruby.move
+    @player.move
   end
 
   def draw
     @camera.draw(@viewport, @map.tile_array, @map.def_img)
     if @menu.show != :false || @message.show == :true
-      @ruby.draw(false)
+      @player.draw(false)
       @menu.draw
       @message.draw
     else
-      @ruby.draw
+      @player.draw
     end
+  end
+
+  def generate_maps
+    @maps = { 
+      farm: [Map.new(self, @menu, FARM_MAP_ARRAY,1), [8,3]],
+      big: [Map.new(self, @menu, BIG_MAP_ARRAY,0), [4,5]],
+      home: [Map.new(self, @menu, HOME_MAP_ARRAY), [3,2]]
+    }
   end
 
   def effect(effect)
@@ -71,40 +85,40 @@ class GameWindow < Gosu::Window
   end
 
   def calc_viewport
-    @viewport = @map.show_tiles(@ruby.x,@ruby.y)
+    @viewport = @map.show_tiles(@player.x,@player.y)
   end
 
   def change_map(map_id, warp = [])
     @map = @maps[map_id][0]
     @map_id = map_id
-    @ruby.map = @map
+    @player.map = @map
     if warp == []
       x, y = @maps[map_id][1][0], @maps[map_id][1][1]
     else
       x, y = warp[0], warp[1]
     end
-    @ruby.warp(x, y)
+    @player.warp(x, y)
     calc_viewport
   end
 
   def input_calc
     if @menu.show == :false && @message.show == :false
-      if @ruby.vel_x == 0 && @ruby.vel_y == 0
+      if @player.vel_x == 0 && @player.vel_y == 0
         if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?(Gosu::KbA))
-          @ruby.accelerate(:left)
+          @player.accelerate(:left)
         elsif (button_down?(Gosu::KbRight) || button_down?(Gosu::GpRight) || button_down?(Gosu::KbD))
-          @ruby.accelerate(:right)
+          @player.accelerate(:right)
         elsif (button_down?(Gosu::KbUp) || button_down?(Gosu::GpUp) || button_down?(Gosu::KbW))
-          @ruby.accelerate(:up)
+          @player.accelerate(:up)
         elsif (button_down?(Gosu::KbDown) || button_down?(Gosu::GpDown) || button_down?(Gosu::KbS))
-          @ruby.accelerate(:down)
+          @player.accelerate(:down)
         end
       end
     end
   end
 
   def button_down(id)
-    if @ruby.vel_x == 0 && @ruby.vel_y == 0
+    if @player.vel_x == 0 && @player.vel_y == 0
       case id
       when Gosu::KbEscape
         close_game
@@ -118,7 +132,7 @@ class GameWindow < Gosu::Window
             if @menu.show == :true
               @menu.interact
             else
-              @ruby.interact
+              @player.interact
             end
           end
         end
@@ -143,6 +157,8 @@ class GameWindow < Gosu::Window
       end
     end
   end
+
+
 
   def close_game
     close
