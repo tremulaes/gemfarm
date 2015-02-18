@@ -32,35 +32,38 @@ class Ruby
   end
 
   def accelerate(direction)
+    @window.set_timer(5) if direction != @direction
     @direction = direction
-    case direction
-    when :up
-      @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
-      if @expected_tile.collidable?
-        @window.fx(:collision)
-      else
-        @vel_y = -2.5 
-      end
-    when :down
-      @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
-      if @expected_tile.collidable?
-        @window.fx(:collision)
-      else
-        @vel_y = 2.5 
-      end
-    when :left
-      @expected_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
-      if @expected_tile.collidable?
-        @window.fx(:collision)
-      else
-        @vel_x = -2.5 
-      end
-    when :right
-      @expected_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
-      if @expected_tile.collidable?
-        @window.fx(:collision)
-      else
-        @vel_x = 2.5 
+    if !@window.waiting
+      case direction
+      when :up
+        @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
+        if @expected_tile.collidable?
+          @window.fx(:collision)
+        else
+          @vel_y = -2.5 
+        end
+      when :down
+        @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
+        if @expected_tile.collidable?
+          @window.fx(:collision)
+        else
+          @vel_y = 2.5 
+        end
+      when :left
+        @expected_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
+        if @expected_tile.collidable?
+          @window.fx(:collision)
+        else
+          @vel_x = -2.5 
+        end
+      when :right
+        @expected_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
+        if @expected_tile.collidable?
+          @window.fx(:collision)
+        else
+          @vel_x = 2.5 
+        end
       end
     end
   end
@@ -116,6 +119,6 @@ class Ruby
     else
       img = @cur_frame
     end
-    img.draw(320, 320, 2, 4, 4)
+    img.draw(321, 321, 2, 4, 4)
   end
 end

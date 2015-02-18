@@ -34,15 +34,11 @@ class GameWindow < Gosu::Window
 
   def update
     time_tick
-      @ruby.move
-      calc_viewport
-    # if !@waiting
-      input_calc
-      @camera.update(@ruby.x, @ruby.y)
-      @menu.update
-    # else
-    #   @camera.update(@ruby.x, @ruby.y)
-    # end
+    calc_viewport
+    @camera.update(@ruby.x, @ruby.y)
+    @menu.update
+    input_calc
+    @ruby.move
   end
 
   def draw
@@ -62,6 +58,7 @@ class GameWindow < Gosu::Window
 
   def set_timer(frames)
     @timer += frames
+    time_tick
   end
 
   def time_tick
