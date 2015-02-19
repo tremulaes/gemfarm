@@ -1,27 +1,20 @@
-require "gosu"
-
 class Player
-  attr_reader :vel_x, :vel_y, :facing_tile, :x, :y #:direction, 
+  attr_reader :facing_tile, :x, :y, :vel_x, :vel_y
   attr_accessor :energy, :map
   
   def initialize(window, map)
-    @window = window
-    @map = map
+    @window, @map = window, map
     @energy = 5
     @animation = Gosu::Image::load_tiles(window, "media/sprites/ruby.png", 16, 16, true)
     @direction = :down
     calc_animation
     @x = @y = @vel_x = @vel_y = 0
-    @current_tile = @map.tile_at(@x, @y)
-    @expected_tile = @current_tile
-    @facing_tile
-    @current_frame = @animation[0]
+    @expected_tile = @current_tile = @map.tile_at(@x, @y)
   end
 
   def warp(x, y)
     @x, @y = x * 64, y * 64
-    @current_tile = @map.tile_at(@x, @y)
-    @expected_tile = @current_tile
+    @expected_tile = @current_tile = @map.tile_at(@x, @y)
   end
 
   def interact
@@ -47,37 +40,21 @@ class Player
       case @direction
       when :up
         @expected_tile = @map.tile_at(@x, @y - 64)
-        if @expected_tile.collidable?
-          @window.fx(:collision)
-        else
-          @vel_y = -4
-        end
+        @expected_tile.collidable? ? @window.fx(:collision) : @vel_y = -4
       when :down
         @expected_tile = @map.tile_at(@x, @y + 64)
-        if @expected_tile.collidable?
-          @window.fx(:collision)
-        else
-          @vel_y = 4
-        end
+        @expected_tile.collidable? ? @window.fx(:collision) : @vel_y = 4
       when :left
         @expected_tile = @map.tile_at(@x - 64, @y)
-        if @expected_tile.collidable?
-          @window.fx(:collision)
-        else
-          @vel_x = -4
-        end
+        @expected_tile.collidable? ? @window.fx(:collision) : @vel_x = -4
       when :right
         @expected_tile = @map.tile_at(@x + 64, @y)
-        if @expected_tile.collidable?
-          @window.fx(:collision)
-        else
-          @vel_x = 4
-        end
+        @expected_tile.collidable? ? @window.fx(:collision) : @vel_x = 4
       end
     end
   end
 
-  def move
+  def update
     if !@window.waiting
       case @direction
       when :up

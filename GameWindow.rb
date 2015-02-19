@@ -16,7 +16,6 @@ require_relative 'Player'
 class GameWindow < Gosu::Window
   attr_reader :map, :map_id, :player, :waiting
   include InterfaceSound
-  # include MapGenerate
 
   def initialize
     super(704, 704, false)
@@ -43,7 +42,7 @@ class GameWindow < Gosu::Window
     @camera.update(@player.x, @player.y)
     @menu.update
     input_calc
-    @player.move
+    @player.update
   end
 
   def draw
