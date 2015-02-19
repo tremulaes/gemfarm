@@ -52,7 +52,7 @@ WARPS = {
     ],
   farm: [],
   big: [
-    { x: 14, y: 2, warp_x: 3, warp_y: 6, map_id: :home}
+    { x: 14, y: 2, warp_x: 3, warp_y: 6, map_id: :home, direction: :up}
   ]
 }
 

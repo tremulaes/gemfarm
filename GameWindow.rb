@@ -30,11 +30,13 @@ class GameWindow < Gosu::Window
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @player.warp(14,3)
+    @player.warp(14,3,:down)
     @map.calc_show_tiles(@player.x,@player.y)
     @camera = Camera.new(self, @map)
     @timer = 0
     @waiting = false
+    @queue = []
+    @action
   end
 
   def update
@@ -43,6 +45,7 @@ class GameWindow < Gosu::Window
     @camera.update(@player.x, @player.y)
     @menu.update
     input_calc
+    do_action if @action
     @player.update
   end
 
@@ -80,6 +83,7 @@ class GameWindow < Gosu::Window
       @timer -= 1  
     else
       @waiting = false
+      @action = @queue.shift if @queue.size > 0
     end
   end
 
@@ -88,12 +92,20 @@ class GameWindow < Gosu::Window
   end
 
   def change_map(change_map_hash)
-    @map = @maps[change_map_hash[:warp_map_id]][0]
-    @map_id = change_map_hash[:warp_map_id]
-    @player.map = @map
-    @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y])
-    @player.direction = change_map_hash[:direction]
-    calc_viewport
+    @queue << [:change_map, change_map_hash]
+  end
+
+  def do_action
+    if @action[0] == :change_map
+      change_map_hash = @action[1]
+      @map = @maps[change_map_hash[:warp_map_id]][0]
+      @map_id = change_map_hash[:warp_map_id]
+      @player.map = @map
+      @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y], change_map_hash[:direction])
+      calc_viewport
+      effect(:fade_in)
+      @action = nil
+    end
   end
 
   def input_calc

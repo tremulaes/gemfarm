@@ -11,13 +11,13 @@ class Warp
   end
 
   def walk_on
-    puts "touched a warp"
     change_map_hash = {
       warp_map_id: @warp_map_id,
       warp_x: @warp_x, 
       warp_y: @warp_y,
       direction: @direction
     }
+    @window.effect(:fade_out)
     @window.change_map(change_map_hash)
   end
 
