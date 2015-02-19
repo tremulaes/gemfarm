@@ -6,11 +6,21 @@ class Crop
     @y = @tile.y
     @type = crop_hash[:type]
     @menu = crop_hash[:menu]
+    load_tileset
     @stage = 0
-    @animation = Gosu::Image::load_tiles(@window, "media/sprites/sapphire_corn.png", 16, 16, true)
+    # @animation = Gosu::Image::load_tiles(@window, "media/sprites/sapphire_corn.png", 16, 16, true)
     calc_animation
     @tile.collidable = true
     @current_frame = @animation[0]
+  end
+
+  def load_tileset
+    @animation = 
+      case @type
+      when :tomato then Gosu::Image::load_tiles(@window, "media/sprites/amethyst_tomato.png", 16, 16, true)
+      when :corn then Gosu::Image::load_tiles(@window, "media/sprites/sapphire_corn.png", 16, 16, true)
+      when :pumpkin then Gosu::Image::load_tiles(@window, "media/sprites/emerald_pumpkin.png", 16, 16, true)
+      end
   end
 
   def touch

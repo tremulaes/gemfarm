@@ -34,10 +34,20 @@ module MenuAction
     when :laugh
       @message.text = "you are a lonely farmer and sit laughing by yourself until you cry it is really sad"
       @action = :none
-    when :plant
+    when :plant_corn
       @window.fx(:accept)
-      tile.new_plant
+      tile.new_plant(:corn)
       @message.text = "You planted SAPPHIRE CORN"
+      @action = :none
+    when :plant_pumpkin
+      @window.fx(:accept)
+      tile.new_plant(:pumpkin)
+      @message.text = "You planted EMERALD PUMPKIN"
+      @action = :none
+    when :plant_tomato
+      @window.fx(:accept)
+      tile.new_plant(:tomato)
+      @message.text = "You planted AMETHYST TOMATO"
       @action = :none
     when :warp
       self.items = WARP_CONFIRM_MENU
@@ -102,7 +112,7 @@ module MenuAction
     if key_array.include?(:water) || key_array.include?(:kick)
       @menu_act_hash[:crop] = @window.player.facing_tile.holding
     end
-    if key_array.include?(:plant)
+    if key_array.include?(:plant_corn) || key_array.include?(:plant_tomato) || key_array.include?(:plant_pumpkin)
       @menu_act_hash[:tile] = @window.player.facing_tile
     end
     if key_array.include?(:energy)

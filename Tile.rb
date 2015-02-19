@@ -22,12 +22,12 @@ class Tile
 		end
 	end
 
-	def new_plant
+	def new_plant(type)
 		crop_hash = {
 			window: @window,
       x: @x,
       y: @y,
-      type: 'corn',
+      type: type,
       tile: self,
       menu: @menu
   	}

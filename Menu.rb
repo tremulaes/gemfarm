@@ -2,7 +2,7 @@ require_relative 'MenuAction'
 require_relative 'InterfaceSound'
 
 CROP_MENU = [{ water: "Water"}, { dance: "Dance"}, { kick: "Kick" }]
-EMPTY_FIELD_MENU = [{ plant: "Plant"}]
+EMPTY_FIELD_MENU = [{ plant_corn: "Plant Corn"}, { plant_pumpkin: "Plant Pumpkin"}, { plant_tomato: "Plant Tomato"}]
 MAP_SCREEN_MENU = [{ energy: "Energy" }, { laugh: "Laugh" }, { warp: "Warp" }, { exit: "Exit"}]
 WARP_CONFIRM_MENU = [{ warp_home: "Home"}, { warp_farm: "Farm"}, { warp_big: "Big Field"}]
 EXIT_CONFIRM_MENU = [{ exit_yes: "Yes"}, exit_no: "No"]
