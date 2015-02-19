@@ -19,6 +19,7 @@ class Player
     @expected_tile = @current_tile
     @facing_tile
     @cur_frame = @down_anim[0]
+    @speed = 64/16
   end
 
   def warp(x, y)
@@ -31,77 +32,102 @@ class Player
     @map.tile_at(@facing_tile.x, @facing_tile.y).touch
   end
 
+  def set_direction(direction)
+    @direction = direction
+    set_facing
+    puts "Current: #{@current_tile.x}, #{@current_tile.y}; Facing: #{@facing_tile.x}, #{@facing_tile.y}; Expected: #{@expected_tile.x}, #{@expected_tile.y}"
+  end
+
+  def set_facing
+    @facing_tile =
+    case @direction
+    when :up then @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
+    when :down then @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
+    when :left then @facing_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
+    when :right then @facing_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
+    end
+  end
+
   def accelerate(direction)
     @window.set_timer(5) if direction != @direction
-    @direction = direction
+    set_direction(direction)
     if !@window.waiting
-      case direction
+      case @direction
       when :up
         @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
         if @expected_tile.collidable?
           @window.fx(:collision)
         else
-          @vel_y = -2.5 
+          @vel_y = -@speed
         end
       when :down
         @expected_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
         if @expected_tile.collidable?
           @window.fx(:collision)
         else
-          @vel_y = 2.5 
+          @vel_y = @speed
         end
       when :left
         @expected_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
         if @expected_tile.collidable?
           @window.fx(:collision)
         else
-          @vel_x = -2.5 
+          @vel_x = -@speed
         end
       when :right
         @expected_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
         if @expected_tile.collidable?
           @window.fx(:collision)
         else
-          @vel_x = 2.5 
+          @vel_x = @speed
         end
       end
+    # else
+    #   @vel_x, @vel_y = 0, 0
     end
   end
 
   def move
-    case @direction
-    when :up
-      @y += @vel_y
-      if @y <= @expected_tile.y
-        @vel_y = 0
-        @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
-      end
-        @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
-      @vel_x = 0
-    when :down
-      @y += @vel_y
-      if @y >= @expected_tile.y
-        @vel_y = 0
-        @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
-      end
-        @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
-      @vel_x = 0
-    when :left
-      @x += @vel_x
-      if @x <= @expected_tile.x
+    if !@window.waiting
+      case @direction
+      when :up
+        @y += @vel_y
+        if @y <= @expected_tile.y
+          @vel_y = 0
+          # @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
+          @current_tile = @map.tile_at(@x, @y)
+        end
+          # @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y - 64)
         @vel_x = 0
-        @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
-      end
-        @facing_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
-      @vel_y= 0
-    when :right
-      @x += @vel_x
-      if @x >= @expected_tile.x
+      when :down
+        @y += @vel_y
+        if @y >= @expected_tile.y
+          @vel_y = 0
+          # @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
+          @current_tile = @map.tile_at(@x, @y)
+        end
+          # @facing_tile = @map.tile_at(@current_tile.x, @current_tile.y + 64)
         @vel_x = 0
-        @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
+      when :left
+        @x += @vel_x
+        if @x <= @expected_tile.x
+          @vel_x = 0
+          # @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
+          @current_tile = @map.tile_at(@x, @y)
+        end
+          # @facing_tile = @map.tile_at(@current_tile.x - 64, @current_tile.y)
+        @vel_y= 0
+      when :right
+        @x += @vel_x
+        if @x >= @expected_tile.x
+          @vel_x = 0
+          # @current_tile = @map.tile_at(@expected_tile.x, @expected_tile.y)
+          @current_tile = @map.tile_at(@x, @y)
+        end
+          # @facing_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
+        @vel_y = 0
       end
-        @facing_tile = @map.tile_at(@current_tile.x + 64, @current_tile.y)
-      @vel_y = 0
+      set_facing
     end
   end
 
@@ -119,6 +145,6 @@ class Player
     else
       img = @cur_frame
     end
-    img.draw(321, 321, 2, 4, 4)
+    img.draw(320, 320, 2, 4, 4)
   end
 end

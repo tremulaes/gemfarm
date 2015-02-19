@@ -9,7 +9,6 @@ require_relative 'Camera'
 require_relative 'Crop'
 require_relative 'InterfaceSound'
 require_relative 'Map'
-require_relative 'MapGenerate'
 require_relative 'Message'
 require_relative 'Menu'
 require_relative 'Player'
@@ -71,7 +70,7 @@ class GameWindow < Gosu::Window
   end
 
   def set_timer(frames)
-    @timer += frames
+    @timer = frames
     time_tick
   end
 
