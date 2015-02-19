@@ -8,7 +8,6 @@ class Crop
     @menu = crop_hash[:menu]
     load_tileset
     @stage = 0
-    # @animation = Gosu::Image::load_tiles(@window, "media/sprites/sapphire_corn.png", 16, 16, true)
     calc_animation
     @tile.collidable = true
     @current_frame = @animation[0]
@@ -27,10 +26,13 @@ class Crop
     @menu.items = CROP_MENU
   end
 
+  def walk_on
+  end
+
   def grow
     @stage >= 3 ? @stage = 0 : @stage += 1
     calc_animation
-  end
+  end  
 
   def die
     @tile.collidable = false

@@ -1,6 +1,6 @@
 class Player
   attr_reader :facing_tile, :x, :y, :vel_x, :vel_y
-  attr_accessor :energy, :map
+  attr_accessor :energy, :map, :direction
   
   def initialize(window, map)
     @window, @map = window, map
@@ -10,11 +10,16 @@ class Player
     calc_animation
     @x = @y = @vel_x = @vel_y = 0
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
+    @warped = false
   end
 
-  def warp(x, y)
+  def warp(x, y, direction)
     @x, @y = x * 64, y * 64
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
+    @direction = direction
+    set_facing
+    calc_animation
+    @warped = true
   end
 
   def interact
@@ -51,6 +56,7 @@ class Player
         @expected_tile = @map.tile_at(@x + 64, @y)
         @expected_tile.collidable? ? @window.fx(:collision) : @vel_x = 4
       end
+      @warped = false
     end
   end
 
@@ -60,27 +66,35 @@ class Player
       when :up
         @y += @vel_y
         if @y <= @expected_tile.y
-          @vel_y = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if !@warped
+          @vel_y = 0
         end
+        @vel_x = 0
       when :down
         @y += @vel_y
         if @y >= @expected_tile.y
-          @vel_y = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if !@warped
+          @vel_y = 0
         end
+        @vel_x = 0
       when :left
         @x += @vel_x
         if @x <= @expected_tile.x
-          @vel_x = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if !@warped
+          @vel_x = 0
         end
+        @vel_y = 0
       when :right
         @x += @vel_x
         if @x >= @expected_tile.x
+          @current_tile = @map.tile_at(@x, @y) 
+          @current_tile.walk_on if !@warped
           @vel_x = 0
-          @current_tile = @map.tile_at(@x, @y)
         end
+        @vel_y = 0
       end
       set_facing
     end
