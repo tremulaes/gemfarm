@@ -60,7 +60,7 @@ class GameWindow < Gosu::Window
     @maps = { 
       farm: [Map.new(self, @menu, FARM_MAP_ARRAY,1), [8,3]],
       big: [Map.new(self, @menu, BIG_MAP_ARRAY,0), [4,5]],
-      home: [Map.new(self, @menu, HOME_MAP_ARRAY), [3,2]]
+      home: [Map.new(self, @menu, HOME_MAP_ARRAY), [2,6]]
     }
   end
 
@@ -155,8 +155,6 @@ class GameWindow < Gosu::Window
       end
     end
   end
-
-
 
   def close_game
     close
