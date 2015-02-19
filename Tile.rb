@@ -22,6 +22,12 @@ class Tile
 		end
 	end
 
+	def walk_on
+		if @holding
+			@holding.walk_on
+		end
+	end
+
 	def new_plant(type)
 		crop_hash = {
 			window: @window,
@@ -32,6 +38,11 @@ class Tile
       menu: @menu
   	}
 		@holding = Crop.new(crop_hash)
+	end
+
+	def new_warp(warp_hash)
+		@holding = Warp.new(@window, warp_hash)
+		puts "new warp at #{@x}, #{@y} on @map.map_id"
 	end
 
 	def collidable?

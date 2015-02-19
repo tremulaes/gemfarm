@@ -1,8 +1,8 @@
 # @maps is a hash; key = map name, value is an array with relevant data
-# array[0] = map object
+# array[0] = map object with initialize conditions
 # array[1] = default warp coordinates [x,y] format
 # array[2] = default image for outside tiles; default to nil if black is desired
-# array[2] = hash array for default object instantiation [{type: [x,y]}, {type: [x,y]}]
+# array[3] = hash array for default object instantiation [{type: [x,y]}, {type: [x,y]}]
 
 require 'gosu'
 require_relative 'Camera'
@@ -12,6 +12,7 @@ require_relative 'Map'
 require_relative 'Message'
 require_relative 'Menu'
 require_relative 'Player'
+require_relative 'Warp'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :map_id, :player, :waiting
@@ -29,7 +30,7 @@ class GameWindow < Gosu::Window
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @player.warp(14,2)
+    @player.warp(14,3)
     @map.calc_show_tiles(@player.x,@player.y)
     @camera = Camera.new(self, @map)
     @timer = 0
@@ -58,9 +59,9 @@ class GameWindow < Gosu::Window
 
   def generate_maps
     @maps = { 
-      farm: [Map.new(self, @menu, FARM_MAP_ARRAY,1), [8,3]],
-      big: [Map.new(self, @menu, BIG_MAP_ARRAY,0), [4,5]],
-      home: [Map.new(self, @menu, HOME_MAP_ARRAY), [2,6]]
+      farm: [Map.new(self, @menu, :farm, FARM_MAP_ARRAY,1), [8,3]],
+      big: [Map.new(self, @menu, :big, BIG_MAP_ARRAY,0), [4,5]],
+      home: [Map.new(self, @menu, :home, HOME_MAP_ARRAY), [2,6]]
     }
   end
 
@@ -86,16 +87,12 @@ class GameWindow < Gosu::Window
     @viewport = @map.show_tiles(@player.x,@player.y)
   end
 
-  def change_map(map_id, warp = [])
-    @map = @maps[map_id][0]
-    @map_id = map_id
+  def change_map(change_map_hash)
+    @map = @maps[change_map_hash[:warp_map_id]][0]
+    @map_id = change_map_hash[:warp_map_id]
     @player.map = @map
-    if warp == []
-      x, y = @maps[map_id][1][0], @maps[map_id][1][1]
-    else
-      x, y = warp[0], warp[1]
-    end
-    @player.warp(x, y)
+    @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y])
+    @player.direction = change_map_hash[:direction]
     calc_viewport
   end
 

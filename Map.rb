@@ -4,15 +4,17 @@ require_relative 'Tile'
 class Map
   attr_reader :tile_array, :def_img
 
-  def initialize(window, menu, array, *def_img_id)
+  def initialize(window, menu, map_id, array, *def_img_id)
     @map_array = array
     @scale = 4
     @window = window
     @menu = menu
+    @map_id = map_id
     @tileset = Gosu::Image::load_tiles(window, "media/tileset/map_tileset.png", 16, 16, true)
     @def_img = def_img_id[0] ? @tileset[def_img_id[0]] : nil
     @tile_array = Array.new(@map_array.size) { Array.new(@map_array[0].size) }
     set_tiles
+    set_warps
     @show_tiles = Array.new(13) { Array.new(13) }
     @h = @tile_array.size
     @w = @tile_array[0].size
@@ -34,6 +36,13 @@ class Map
         @tile_array[y_index][x_index] = Tile.new(tile_hash)  
       end
     end    
+  end
+
+  def set_warps
+    warp_list = WARPS[@map_id]
+    warp_list.each do |warp|
+      tile_at(warp[:x] * 64,warp[:y] * 64).new_warp(warp)
+    end
   end
 
   def tile_num_at(x, y)

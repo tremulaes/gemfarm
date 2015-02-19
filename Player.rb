@@ -1,6 +1,6 @@
 class Player
   attr_reader :facing_tile, :x, :y, :vel_x, :vel_y
-  attr_accessor :energy, :map
+  attr_accessor :energy, :map, :direction
   
   def initialize(window, map)
     @window, @map = window, map
@@ -60,26 +60,30 @@ class Player
       when :up
         @y += @vel_y
         if @y <= @expected_tile.y
-          @vel_y = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if @vel_x != 0 || @vel_y != 0
+          @vel_y = 0
         end
       when :down
         @y += @vel_y
         if @y >= @expected_tile.y
-          @vel_y = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if @vel_x != 0 || @vel_y != 0
+          @vel_y = 0
         end
       when :left
         @x += @vel_x
         if @x <= @expected_tile.x
-          @vel_x = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if @vel_x != 0 || @vel_y != 0
+          @vel_x = 0
         end
       when :right
         @x += @vel_x
         if @x >= @expected_tile.x
-          @vel_x = 0
           @current_tile = @map.tile_at(@x, @y)
+          @current_tile.walk_on if @vel_x != 0 || @vel_y != 0
+          @vel_x = 0
         end
       end
       set_facing

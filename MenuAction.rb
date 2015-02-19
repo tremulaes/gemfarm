@@ -50,49 +50,8 @@ module MenuAction
       @message.text = "You planted AMETHYST TOMATO"
       @action = :none
     when :warp
-      self.items = WARP_CONFIRM_MENU
-      @message.text = "Where would you like to go?"
+      @message.text = "What, you think you can teleport? You're a farmer, not an X-man."
       @action = :none
-      self.show = :continue
-    when :warp_home
-      if !@window.waiting
-        @window.fx(:accept)
-        @window.effect(:fade_out)
-        close_menu
-        @action = :warp_home2
-      end
-    when :warp_home2
-      if !@window.waiting
-        @window.change_map(:home)
-        @window.effect(:fade_in)
-        @action = :none
-      end
-    when :warp_farm
-    if !@window.waiting
-      @window.fx(:accept)
-      @window.effect(:fade_out)
-      close_menu
-      @action = :warp_farm2
-    end
-    when :warp_farm2
-      if !@window.waiting
-        @window.change_map(:farm)
-        @window.effect(:fade_in)
-        @action = :none
-      end
-    when :warp_big
-      if !@window.waiting
-        @window.fx(:accept)
-        @window.effect(:fade_out)
-        close_menu
-        @action = :warp_big2
-      end
-    when :warp_big2
-      if !@window.waiting
-        @window.change_map(:big)
-        @window.effect(:fade_in)
-        @action = :none
-      end
     when :water
       @window.fx(:bubble)
       crop.grow
@@ -117,9 +76,6 @@ module MenuAction
     end
     if key_array.include?(:energy)
       @menu_act_hash[:energy] = @window.player.energy
-    end
-    if key_array.include?(:warp)
-      @menu_act_hash[:map] = WARP_CONFIRM_MENU
     end
   end
 end
