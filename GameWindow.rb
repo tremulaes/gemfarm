@@ -23,13 +23,13 @@ class GameWindow < Gosu::Window
     @message = Message.new(self)
     @menu = Menu.new(self, @message)
     generate_maps
-    @map = @maps[:farm][0]
-    @map_id = :farm
+    @map = @maps[:big][0]
+    @map_id = :big
     @player = Player.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @player.warp(5,6)
+    @player.warp(14,2)
     @map.calc_show_tiles(@player.x,@player.y)
     @camera = Camera.new(self, @map)
     @timer = 0
