@@ -24,13 +24,13 @@ class GameWindow < Gosu::Window
     @message = Message.new(self)
     @menu = Menu.new(self, @message)
     generate_maps
-    @map = @maps[:big][0]
-    @map_id = :big
+    @map = @maps[:farm][0]
+    @map_id = :farm
     @player = Player.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
-    @player.warp(14,3,:down)
+    @player.warp(4,5,:down)
     @map.calc_show_tiles(@player.x,@player.y)
     @camera = Camera.new(self, @map)
     @timer = 0
@@ -44,7 +44,7 @@ class GameWindow < Gosu::Window
     calc_viewport
     @camera.update(@player.x, @player.y)
     @menu.update
-    input_calc
+    input_calc if !@waiting
     do_action if @action
     @player.update
   end
@@ -100,7 +100,9 @@ class GameWindow < Gosu::Window
       change_map_hash = @action[1]
       @map = @maps[change_map_hash[:warp_map_id]][0]
       @map_id = change_map_hash[:warp_map_id]
+      # puts "old map: #{@player.map}"
       @player.map = @map
+      # puts "new map: #{@player.map}"
       @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y], change_map_hash[:direction])
       calc_viewport
       effect(:fade_in)
