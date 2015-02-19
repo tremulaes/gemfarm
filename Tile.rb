@@ -3,6 +3,7 @@ class Tile
 	attr_accessor :collidable, :holding
 
 	def initialize(tile_hash)
+		@window = tile_hash[:window]
 		@x = tile_hash[:x]
 		@y = tile_hash[:y]
 		@collidable = tile_hash[:collidable]
@@ -23,13 +24,14 @@ class Tile
 
 	def new_plant
 		crop_hash = {
+			window: @window,
       x: @x,
       y: @y,
       type: 'corn',
-      map: @map,
+      tile: self,
       menu: @menu
   	}
-		@map.set_crop(crop_hash)
+		@holding = Crop.new(crop_hash)
 	end
 
 	def collidable?

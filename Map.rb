@@ -22,6 +22,7 @@ class Map
     @map_array.each_with_index do |subarray, y_index|
       subarray.each_with_index do |cell, x_index|
         tile_hash = {
+          window: @window,
           x: x_index * 64,
           y: y_index * 64,
           collidable: MAP_COLL.include?(cell),
@@ -33,18 +34,6 @@ class Map
         @tile_array[y_index][x_index] = Tile.new(tile_hash)  
       end
     end    
-  end
-
-  def set_crop(crop_hash)
-    if !crop_hash.include?(:window)
-      crop_hash[:window] = @window
-    end
-    tile_at(crop_hash[:x], crop_hash[:y]).holding = Crop.new(crop_hash)
-  end
-
-  def crop_die(x,y)
-    crop_object_id = tile_at(x,y).holding.object_id
-    tile_at(x,y).holding = nil
   end
 
   def tile_num_at(x, y)
