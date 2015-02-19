@@ -17,6 +17,7 @@ class Player
     @x, @y = x * 64, y * 64
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
     @direction = direction
+    set_facing
     calc_animation
     @warped = true
   end
@@ -66,30 +67,34 @@ class Player
         @y += @vel_y
         if @y <= @expected_tile.y
           @current_tile = @map.tile_at(@x, @y)
-          @current_tile.walk_on if !@warped && @vel_y == 0
+          @current_tile.walk_on if !@warped
           @vel_y = 0
         end
+        @vel_x = 0
       when :down
         @y += @vel_y
         if @y >= @expected_tile.y
           @current_tile = @map.tile_at(@x, @y)
-          @current_tile.walk_on if !@warped && @vel_y == 0
+          @current_tile.walk_on if !@warped
           @vel_y = 0
         end
+        @vel_x = 0
       when :left
         @x += @vel_x
         if @x <= @expected_tile.x
           @current_tile = @map.tile_at(@x, @y)
-          @current_tile.walk_on if !@warped && @vel_x == 0
+          @current_tile.walk_on if !@warped
           @vel_x = 0
         end
+        @vel_y = 0
       when :right
         @x += @vel_x
         if @x >= @expected_tile.x
           @current_tile = @map.tile_at(@x, @y) 
-          @current_tile.walk_on if !@warped && @vel_x == 0
+          @current_tile.walk_on if !@warped
           @vel_x = 0
         end
+        @vel_y = 0
       end
       set_facing
     end

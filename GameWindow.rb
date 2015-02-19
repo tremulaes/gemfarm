@@ -73,7 +73,7 @@ class GameWindow < Gosu::Window
   end
 
   def set_timer(frames)
-    @timer = frames
+    @timer = frames if frames > @timer
     time_tick
   end
 

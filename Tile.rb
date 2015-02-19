@@ -42,7 +42,6 @@ class Tile
 
 	def new_warp(warp_hash)
 		@holding = Warp.new(@window, warp_hash)
-		puts "new warp at #{@x}, #{@y} on @map.map_id"
 	end
 
 	def collidable?
