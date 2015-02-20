@@ -2,7 +2,6 @@ class TextEvent
   def initialize(window, text)
     @window = window
     @text = text
-    @draw = false
   end
 
   def touch

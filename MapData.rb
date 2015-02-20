@@ -74,5 +74,13 @@ TEXT_EVENTS = {
   big: []
 }
 
+MISC_EVENTS = {
+  home: [
+    {x: 8, y: 1, type: :bed}
+  ],
+  farm: [],
+  big: []
+}
+
 # determines collision; per TILESET, not MAP
 MAP_COLL = [1,3,5,6,7,8,9,10,11,12,13,15,16,17,18,19,20,23,24,26,27,29]

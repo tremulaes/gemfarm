@@ -14,8 +14,7 @@ class Map
     @def_img = def_img_id[0] ? @tileset[def_img_id[0]] : nil
     @tile_array = Array.new(@map_array.size) { Array.new(@map_array[0].size) }
     set_tiles
-    set_warps
-    set_textevents
+    set_events
     @show_tiles = Array.new(13) { Array.new(13) }
     @h = @tile_array.size
     @w = @tile_array[0].size
@@ -39,19 +38,19 @@ class Map
     end    
   end
 
-  def set_warps
-    warp_list = WARPS[@map_id]
-    warp_list.each do |warp|
-      tile_at(warp[:x] * 64,warp[:y] * 64).new_warp(warp)
+  def set_events
+    WARPS[@map_id].each do |event|
+      # tile_at(warp[:x] * 64,warp[:y] * 64).new_warp(warp)
+      tile_at(event[:x] * 64, event[:y] * 64).new_event(:warp, event)
+    end
+    TEXT_EVENTS[@map_id].each do |event|
+      # tile_at(event[:x] * 64, event[:y] * 64).new_textevent(event[:text])
+      tile_at(event[:x] * 64, event[:y] * 64).new_event(:textevent, event[:text])
+    end
+    MISC_EVENTS[@map_id].each do |event|
+      tile_at(event[:x] * 64, event[:y] * 64).new_event(:bed)
     end
   end
-
-  def set_textevents
-    textevent_list = TEXT_EVENTS[@map_id]
-    textevent_list.each do |event|
-      tile_at(event[:x] * 64, event[:y] * 64).new_textevent(event[:text])
-    end
-  end  
 
   def tile_num_at(x, y)
     coords = [x / 64, y / 64]

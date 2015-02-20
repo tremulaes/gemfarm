@@ -1,14 +1,13 @@
 class Bed
-  def initialize(window, text)
+  def initialize(window)
     @window = window
-    @draw = false
     calc_menu
   end
 
   def calc_menu
     @bed_menu = [
       { print: "Yes", block: lambda {
-        |params| params[:window].day_pass
+        |params| params[:window].calendar.day_pass
       } },
       { print: "No", block: lambda {
         |params| params[:menu].close

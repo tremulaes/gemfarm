@@ -53,13 +53,14 @@ class Tile
 		@holding = nil
 	end
 
-	def new_warp(warp_hash)
-		@holding = Warp.new(@window, warp_hash)
-	end
-
-	def new_textevent(text)
-		@holding = TextEvent.new(@window, text)
-	end
+  def new_event(type, param = nil)
+    case type
+    when :warp then @holding = Warp.new(@window, param)
+    when :textevent then @holding = TextEvent.new(@window, param)
+    when :bed then 
+      @holding = Bed.new(@window)
+    end
+  end
 
 	def collidable?
 		@collidable
