@@ -13,9 +13,10 @@ require_relative 'Player'
 require_relative 'Sound'
 require_relative 'Warp'
 require_relative 'TextEvent'
+require_relative 'Timer'
 
 class GameWindow < Gosu::Window
-  attr_reader :map, :map_id, :player, :waiting, :calendar, :sounds
+  attr_reader :map, :player, :timer, :calendar, :sounds
   attr_accessor :mode, :menu
 
   def initialize
@@ -23,7 +24,6 @@ class GameWindow < Gosu::Window
     self.caption = 'Gem Farm'
     generate_maps
     @map = @maps[:home][0]
-    @map_id = :home
     @sounds = Sound.new(self)
     @player = Player.new(self, @map)
     @player.warp(4,5,:down)
@@ -32,18 +32,19 @@ class GameWindow < Gosu::Window
     calc_menu
     @menu = Menu.new(self, @player, @window_menu)
     @camera = Camera.new(self, @map)
-    @timer = 0
-    @waiting = false
+    @timer = Timer.new
     @queue = []
     @action
     @mode = :field # :field, :message, :menu
   end
 
   def update
-    time_tick
+    @timer.update
+    @sounds.update
+    @action = @queue.shift if @queue.size > 0 && !@timer.waiting
     calc_viewport
     @camera.update(@player.x, @player.y)
-    input_calc if !@waiting
+    input_calc if !@timer.waiting
     do_action if @action
     @player.update
   end
@@ -94,18 +95,7 @@ class GameWindow < Gosu::Window
   end
 
   def set_timer(frames)
-    @timer = frames if frames > @timer
-    time_tick
-  end
-
-  def time_tick
-    if @timer > 0
-      @waiting = true
-      @timer -= 1  
-    else
-      @waiting = false
-      @action = @queue.shift if @queue.size > 0
-    end
+    @timer.set_timer(frames)
   end
 
   def calc_viewport
@@ -120,7 +110,6 @@ class GameWindow < Gosu::Window
     if @action[0] == :change_map
       change_map_hash = @action[1]
       @map = @maps[change_map_hash[:warp_map_id]][0]
-      @map_id = change_map_hash[:warp_map_id]
       @player.map = @map
       @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y], change_map_hash[:direction])
       calc_viewport

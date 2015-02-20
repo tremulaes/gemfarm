@@ -2,17 +2,39 @@ class Sound
   def initialize(window)
     @window = window
     load_songs
-    @early_farming.play(true)
+    @current_song = @early_farming
+    @current_song.play(true)
     load_sounds
+    @effect = :none
+    @bgm_vol = 1.0
+    @queue = []
+  end
+
+  def update
+    queue_handle
+    case @effect
+    when :fade_out then @bgm_vol >= 0 ? @bgm_vol -= 0.005 : @effect = :none
+    when :fade_in then @bgm_vol <= 1 ? @bgm_vol += 0.005 : @effect = :none
+    when :change_song
+      @current_song.stop
+      @current_song == @early_farming ? @current_song = @late_farming : @current_song = @early_farming
+      @current_song.play(true)
+      @effect = :none
+    end
+    @current_song.volume = @bgm_vol
+  end
+
+  def queue_handle
+    @effect = @queue.shift if !@queue.empty? && @effect == :none
+  end
+
+  def effect(*effect)
+    effect.each { |effect| @queue << effect}
   end
 
   def day_pass(day)
-    if day == 1
-      @late_farming.stop
-      @early_farming.play(true)
-    elsif day == 16
-      @early_farming.stop
-      @late_farming.play(true)
+    if day == 1 || day == 16
+      effect(:fade_out, :change_song, :fade_in)
     end
   end
 

@@ -7,11 +7,16 @@ class Calendar
   end
 
   def day_pass
-    @day += 1
-    Tile.all_crops.each { |crop| crop.day_pass }
-    @window.player.day_pass
-    @window.sounds.day_pass(@day)
-    @window.effect(:fade_in)
-    @window.show_message("Another day has passed.")
+    if @day != 30
+      @day += 1
+      Tile.all_crops.each { |crop| crop.day_pass }
+      @window.player.day_pass
+      @window.sounds.day_pass(@day)
+      @window.effect(:fade_in)
+      @window.show_message("Another day has passed.")
+    else
+      @day = 1
+      @window.show_message("Market day came and went.")
+    end
   end
 end

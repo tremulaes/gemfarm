@@ -1,5 +1,5 @@
 class Player
-  attr_reader :facing_tile, :x, :y, :vel_x, :vel_y
+  attr_reader :facing_tile, :x, :y, :vel_x, :vel_y, :max_energy
   attr_accessor :energy, :map, :direction
   
   def initialize(window, map)
@@ -62,7 +62,7 @@ class Player
     @direction = direction
     calc_animation
     set_facing
-    if !@window.waiting
+    if !@window.timer.waiting
       case @direction
       when :up
         @expected_tile = @map.tile_at(@x, @y - 64)
@@ -82,7 +82,7 @@ class Player
   end
 
   def update
-    if !@window.waiting
+    if !@window.timer.waiting
       case @direction
       when :up
         @y += @vel_y
@@ -129,7 +129,7 @@ class Player
     when :right then [@animation[12],@animation[13],@animation[14],@animation[15]]
     when :left then [@animation[4],@animation[5],@animation[6],@animation[7]]
     end
-    @max_energy / (@energy.nonzero? || 1) <= 0.20 ? @animation_speed = 200 : @animation_speed = 400
+    @max_energy / (@energy.nonzero? || 1) <= 0.20 ? @animation_speed = 400 : @animation_speed = 200
   end
 
   def draw(move = true)

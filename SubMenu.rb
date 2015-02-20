@@ -31,7 +31,7 @@ class SubMenu
 
   def calc_print_list
     @print_list.clear
-    @current_list.each do |hash| ################## CHANGES
+    @current_list.each do |hash|
       @print_list << hash[:print]
     end
   end
