@@ -1,4 +1,5 @@
 require_relative 'MenuAction'
+require_relative 'Message'
 require_relative 'SubMenu'
 
 class Menu
@@ -84,7 +85,6 @@ class Menu
   end
 
   def close
-    puts "Closed menus!"
     @mode = :select
     @sub_menu1.mode = :select
     @sub_menu2.mode = :select

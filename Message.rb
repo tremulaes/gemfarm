@@ -14,8 +14,8 @@ class Message
     @show_index
     @show = :false
     @next_line = false
-    @print_text = ["",""]
-    @p_index = [0,0]
+    @print_text = ["", ""]
+    @p_index = [0, 0]
     @waiting = false # true when text is filling box
   end
 
@@ -37,8 +37,8 @@ class Message
   end
 
   def line_slicer(new_text)
-    while new_text.size >= 27
-      l_index = new_text.slice(0..26).rindex(" ")
+    while new_text.size >= 30
+      l_index = new_text.slice(0..29).rindex(" ")
       @line_array << new_text.slice!(0..l_index)
     end
     @line_array << new_text
@@ -70,18 +70,11 @@ class Message
       @next_line = false if @line_array.size - @show_index <= 2
       reset_prints
     else
-      # if true
-      #   interact
-      # else 
         @current_menu.close
-      # end
-      # @show = :false
-      # @window.mode = :field
     end
   end
 
   def fill_text
-    # if !@window.waiting
       fill_prints if Gosu::milliseconds / 50 % 2 == 0
       if @show_line.size > 1
         if @print_text[1].size < @show_line[1].size
@@ -96,7 +89,6 @@ class Message
           @waiting = true
         end
       end
-    # end
   end
 
   def fill_prints

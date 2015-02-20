@@ -9,7 +9,6 @@ require_relative 'Camera'
 require_relative 'Crop'
 require_relative 'InterfaceSound'
 require_relative 'Map'
-require_relative 'Message'
 require_relative 'Menu'
 require_relative 'Player'
 require_relative 'Warp'
@@ -36,7 +35,6 @@ class GameWindow < Gosu::Window
     @waiting = false
     @queue = []
     @action
-    # @message = Message.new(self, @menu)
     @menu = Menu.new(self, @player)
     @mode = :field
   end
@@ -60,7 +58,6 @@ class GameWindow < Gosu::Window
     if @mode == :menu
       @player.draw(false)
       @menu.draw
-      # @message.draw
     else
       @player.draw
     end
