@@ -15,7 +15,7 @@ class Bed
   end
 
   def touch
-    @window.show_menu(@bed_menu)
+    @window.show_prompt(@bed_menu, "Are you sure you want to sleep?")
   end
 
   def walk_on

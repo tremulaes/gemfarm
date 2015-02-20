@@ -20,7 +20,7 @@ class SubMenu
     @cursor = 0
   end
 
-  def current_list=(new_list)
+  def show_menu(new_list)
     if @current_list != new_list
       @current_list = new_list
       @cursor = 0

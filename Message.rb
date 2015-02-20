@@ -1,4 +1,5 @@
 class Message
+  attr_reader :waiting
   attr_accessor :show, :current_menu
 
   def initialize(window, menu)
@@ -19,7 +20,7 @@ class Message
     @waiting = false # true when text is filling box
   end
 
-  def set_text(new_text, waiting_submenu = false) #must be string!
+  def show_text(new_text, waiting_submenu = false) #must be string!
     reset_prints
     @current_menu.mode = :message
     @waiting_submenu = waiting_submenu
@@ -42,12 +43,6 @@ class Message
       @line_array << new_text.slice!(0..l_index)
     end
     @line_array << new_text
-  end
-
-  def close
-    reset_prints
-    @text = ""
-    @show = :false
   end
 
   def interact
@@ -110,6 +105,12 @@ class Message
   def reset_prints
     @p_index = [0,0]
     @print_text = ["",""]
+  end
+
+  def close
+    reset_prints
+    @text = ""
+    @show = :false
   end
 
   def draw

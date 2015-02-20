@@ -54,12 +54,17 @@ class GameWindow < Gosu::Window
   end
 
   def show_menu(menu)
-    @menu.current_list = menu
+    @menu.show_menu(menu)
     @mode = :menu
   end
 
   def show_message(text)
     @menu.show_message(text.clone)
+    @mode = :menu
+  end
+
+  def show_prompt(menu, text)
+    @menu.show_prompt(menu, text.clone)
     @mode = :menu
   end
 
@@ -135,17 +140,17 @@ class GameWindow < Gosu::Window
         } } ] 
     @window_menu = [
       { print: "Energy", block: lambda {
-        |params| params[:message].set_text("You have #{params[:player].energy} left today.")
+        |params| params[:message].show_text("You have #{params[:player].energy} left today.")
         } },
       { print: "Date", block: lambda {
-        |params| params[:message].set_text("Today is day #{params[:window].calendar.day}; there are #{30 - params[:window].calendar.day} days left until market. Get to work!")
+        |params| params[:message].show_text("Today is day #{params[:window].calendar.day}; there are #{30 - params[:window].calendar.day} days left until market. Get to work!")
         } },
       { print: "Day Pass", block: lambda {
         |params| params[:window].calendar.day_pass
         } },
       { print: "Exit Game", block: lambda { # calls for submenu!
         |params| params[:menu].use_sub_menu(:sub_menu1, @exit_confirm_menu)
-        params[:message].set_text("Are you sure you want to quit?", true)
+        params[:message].show_text("Are you sure you want to quit?", true)
         } },
       { print: "Cancel", block: lambda {
         |params| params[:menu].close
