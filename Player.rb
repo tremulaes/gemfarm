@@ -4,13 +4,17 @@ class Player
   
   def initialize(window, map)
     @window, @map = window, map
-    @energy = 5
+    @energy = @max_energy = 25
     @animation = Gosu::Image::load_tiles(window, "media/sprites/ruby.png", 16, 16, true)
     @direction = :down
     calc_animation
     @x = @y = @vel_x = @vel_y = 0
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
     @warped = false
+  end
+
+  def day_pass
+    @energy = @max_energy
   end
 
   def warp(x, y, direction)

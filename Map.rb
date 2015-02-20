@@ -48,9 +48,7 @@ class Map
 
   def set_textevents
     textevent_list = TEXT_EVENTS[@map_id]
-    # puts "#{@map_id} #{TEXT_EVENTS}"
     textevent_list.each do |event|
-      # puts "#{event}"
       tile_at(event[:x] * 64, event[:y] * 64).new_textevent(event[:text])
     end
   end  

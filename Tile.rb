@@ -1,6 +1,7 @@
 class Tile
 	attr_reader :x, :y, :tile_id
-	attr_accessor :collidable, :holding
+	attr_accessor :collidable, :holding#, :all_crops
+	@@all_crops = Array.new
 
 	def initialize(tile_hash)
 		@window = tile_hash[:window]
@@ -12,6 +13,10 @@ class Tile
 		@map = tile_hash[:map]
 		@menu = tile_hash[:menu]
 		@holding
+	end
+
+	def self.all_crops
+		@@all_crops
 	end
 
 	def touch
@@ -28,7 +33,7 @@ class Tile
 		end
 	end
 
-	def new_plant(type)
+	def new_crop(type)
 		crop_hash = {
 			window: @window,
       x: @x,
@@ -38,6 +43,13 @@ class Tile
       menu: @menu
   	}
 		@holding = Crop.new(crop_hash)
+		@@all_crops << @holding
+	end
+
+	def kill_crop
+		@@all_crops.delete_if {|item| item.object_id == @holding.object_id }
+		@collidable = false
+		@holding = nil
 	end
 
 	def new_warp(warp_hash)

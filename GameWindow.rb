@@ -5,6 +5,7 @@
 # array[3] = hash array for default object instantiation [{type: [x,y]}, {type: [x,y]}]
 
 require 'gosu'
+require_relative 'Calendar'
 require_relative 'Camera'
 require_relative 'Crop'
 require_relative 'InterfaceSound'
@@ -15,7 +16,7 @@ require_relative 'Warp'
 require_relative 'TextEvent'
 
 class GameWindow < Gosu::Window
-  attr_reader :map, :map_id, :player, :waiting
+  attr_reader :map, :map_id, :player, :waiting, :calendar
   attr_accessor :mode
   include InterfaceSound
 
@@ -25,18 +26,19 @@ class GameWindow < Gosu::Window
     generate_maps
     @map = @maps[:home][0]
     @map_id = :home
-    @player = Player.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
     load_sounds
+    @player = Player.new(self, @map)
     @player.warp(4,5,:down)
     @map.calc_show_tiles(@player.x,@player.y)
+    @calendar = Calendar.new(self)
+    @menu = Menu.new(self, @player)
     @camera = Camera.new(self, @map)
     @timer = 0
     @waiting = false
     @queue = []
     @action
-    @menu = Menu.new(self, @player)
     @mode = :field # :field, :message, :menu
   end
 

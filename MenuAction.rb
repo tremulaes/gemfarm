@@ -21,24 +21,25 @@ module MenuAction
           |params| params[0].set_text("you danced with the crop but it's really hard to say why you would think that's a good idea.")
           }, params: [@message] },
         { print: "Kick", block: lambda {
-          |params| params[1].die; params[0].set_text("You are a meanie you killed the crop")
-          }, params: [@message, @player.facing_tile.holding] },
+          |params| params[1].kill_crop; params[0].set_text("You are a meanie you killed the crop")
+          params[2].energy -= 1
+          }, params: [@message, @player.facing_tile, @player] },
         { print: "Cancel", block: lambda {
           |params| params[0].close
           }, params: [self] } ],
       plant_menu: [
         { print: "Plant Corn", block: lambda {
-          |params| params[1].new_plant(:corn)
-          params[0].set_text("You planted SAPPHIRE CORN")
-          }, params: [@message, @player.facing_tile] },
+          |params| params[1].new_crop(:corn)
+          params[0].set_text("You planted SAPPHIRE CORN"); params[2].energy -= 1
+          }, params: [@message, @player.facing_tile, @player] },
         { print: "Plant Pumpkin", block: lambda {
-          |params| params[1].new_plant(:pumpkin)
-          params[0].set_text("You planted EMERALD PUMPKIN")
-          }, params: [@message, @player.facing_tile] },
+          |params| params[1].new_crop(:pumpkin)
+          params[0].set_text("You planted EMERALD PUMPKIN"); params[2].energy -= 1
+          }, params: [@message, @player.facing_tile, @player] },
         { print: "Plant Tomato", block: lambda {
-          |params| params[1].new_plant(:tomato)
-          params[0].set_text("You planted AMETHYST TOMATO")
-          }, params: [@message, @player.facing_tile] },
+          |params| params[1].new_crop(:tomato)
+          params[0].set_text("You planted AMETHYST TOMATO"); params[2].energy -= 1
+          }, params: [@message, @player.facing_tile, @player] },
         { print: "Cancel", block: lambda {
           |params| params[0].close
           }, params: [self] } ],
@@ -46,9 +47,12 @@ module MenuAction
         { print: "Energy", block: lambda {
           |params| params[0].set_text("You have #{params[1]} left today.")
           }, params: [@message, @player.energy] },
-        { print: "Laugh", block: lambda {
-          |params| params[0].set_text("you are a lonely farmer and sit laughing by yourself until you cry it is really sad")
-          }, params: [@message] },
+        { print: "Date", block: lambda {
+          |params| params[1].set_text("Today is day #{params[0].calendar.day}; there are #{30 - params[0].calendar.day} days left until market. Get to work!")
+          }, params: [@window, @message] },
+        { print: "Day Pass", block: lambda {
+          |params| params[0].calendar.day_pass
+          }, params: [@window] },
         { print: "Exit Game", block: lambda { # calls for submenu!
           |params| params[0].use_sub_menu(:sub_menu1, :exit_confirm_menu)
           params[1].set_text("Are you sure you want to quit?", true)

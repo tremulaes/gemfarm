@@ -1,4 +1,5 @@
 class Crop
+  attr_reader :type
   def initialize(crop_hash)
     @window = crop_hash[:window]
     @tile = crop_hash[:tile]
@@ -29,14 +30,13 @@ class Crop
   def walk_on
   end
 
+  def day_pass
+    puts "A day passed for me! I'm a #{@type} at stage #{@stage}!"
+  end
+
   def grow
     @stage >= 3 ? @stage = 0 : @stage += 1
     calc_animation
-  end  
-
-  def die
-    @tile.collidable = false
-    @tile.holding = nil
   end
 
   def calc_animation
