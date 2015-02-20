@@ -37,8 +37,8 @@ class Message
   end
 
   def line_slicer(new_text)
-    while new_text.size >= 30
-      l_index = new_text.slice(0..29).rindex(" ")
+    while new_text.size >= 33
+      l_index = new_text.slice(0..32).rindex(" ")
       @line_array << new_text.slice!(0..l_index)
     end
     @line_array << new_text
@@ -70,7 +70,7 @@ class Message
       @next_line = false if @line_array.size - @show_index <= 2
       reset_prints
     else
-        @current_menu.close
+      @current_menu.close
     end
   end
 
@@ -118,7 +118,7 @@ class Message
       @window.draw_quad(@x + @b, @y + @b, @white, @x + @w - @b, @y + @b, @white, @x + @b, @y + @h - @b, @white, @x + @w - @b, @y + @h - @b, @white, 5) # white box
       fill_text
       @print_text.each_with_index do |line, index|
-        @font.draw("#{line}", @x + 35 , @y + 10 + (index * 52), 6, 4.0, 4.0, @black)
+        @font.draw("#{line}", @x + 20 , @y + 10 + (index * 52), 6, 4.0, 4.0, @black)
       end
       if @next_line && @waiting
         if Gosu::milliseconds / 200 % 4 <= 1

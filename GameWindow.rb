@@ -12,6 +12,7 @@ require_relative 'Map'
 require_relative 'Menu'
 require_relative 'Player'
 require_relative 'Warp'
+require_relative 'TextEvent'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :map_id, :player, :waiting
@@ -22,8 +23,8 @@ class GameWindow < Gosu::Window
     super(704, 704, false)
     self.caption = 'Gem Farm'
     generate_maps
-    @map = @maps[:farm][0]
-    @map_id = :farm
+    @map = @maps[:home][0]
+    @map_id = :home
     @player = Player.new(self, @map)
     @background_music = Gosu::Song.new(self, "media/sound/farming.wav")
     @background_music.play(true)
@@ -36,7 +37,7 @@ class GameWindow < Gosu::Window
     @queue = []
     @action
     @menu = Menu.new(self, @player)
-    @mode = :field
+    @mode = :field # :field, :message, :menu
   end
 
   def update
@@ -53,11 +54,20 @@ class GameWindow < Gosu::Window
     @mode = :menu
   end
 
+  def show_message(text)
+    @menu.show_message(text.clone)
+    @mode = :menu
+  end
+
   def draw
     @camera.draw(@viewport, @map.tile_array, @map.def_img)
-    if @mode == :menu
+    case @mode
+    when :menu
       @player.draw(false)
       @menu.draw
+    when :message
+      @player.draw(false)
+      @menu.message.draw
     else
       @player.draw
     end

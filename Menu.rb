@@ -50,6 +50,11 @@ class Menu
     calc_dimen
   end
 
+  def show_message(text)
+    @message.set_text(text)
+    @mode = :message_only
+  end
+
   def calc_print_list
     @print_list.clear
     @menus[@current_list].each do |hash|
@@ -78,6 +83,7 @@ class Menu
     when :message then @message.interact
     when :sub_menu1 then @sub_menu1.interact
     when :sub_menu2 then @sub_menu2.interact
+    when :message_only then @message.interact
     else 
       calc_menu
       @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
@@ -101,12 +107,14 @@ class Menu
   end
 
   def draw
-    @window.draw_quad(@x - @b, @y - @b, @black, @x + @w + @b, @y - @b, @black, @x - @b, @y + @h + @b, @black, @x + @w + @b, @y + @h + @b, @black, 4) #black box
-    @window.draw_quad(@x, @y, @white, @x + @w, @y, @white, @x, @y + @h, @white, @x + @w, @y + @h, @white, 5) # white box
-    @print_list.each_with_index do |text, index|
-      @font.draw("#{text}", @x + 30 , @y + 10 + (index * 52), 6, 4.0, 4.0, @black)
+    if @mode != :message_only
+      @window.draw_quad(@x - @b, @y - @b, @black, @x + @w + @b, @y - @b, @black, @x - @b, @y + @h + @b, @black, @x + @w + @b, @y + @h + @b, @black, 4) #black box
+      @window.draw_quad(@x, @y, @white, @x + @w, @y, @white, @x, @y + @h, @white, @x + @w, @y + @h, @white, 5) # white box
+      @print_list.each_with_index do |text, index|
+        @font.draw("#{text}", @x + 30 , @y + 10 + (index * 52), 6, 4.0, 4.0, @black)
+      end
+      @window.draw_triangle(@x + 5, @cursor * 52 + 20 + @y, @black, @x + 5, @cursor * 52 + 40 + @y, @black, @x + 22, @cursor * 52 + 30 + @y, @black, 7) # cursor
     end
-    @window.draw_triangle(@x + 5, @cursor * 52 + 20 + @y, @black, @x + 5, @cursor * 52 + 40 + @y, @black, @x + 22, @cursor * 52 + 30 + @y, @black, 7) # cursor
     @message.draw
     case @mode
     when :sub_menu1 then @sub_menu1.draw

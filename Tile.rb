@@ -44,6 +44,10 @@ class Tile
 		@holding = Warp.new(@window, warp_hash)
 	end
 
+	def new_textevent(text)
+		@holding = TextEvent.new(@window, text)
+	end
+
 	def collidable?
 		@collidable
 	end

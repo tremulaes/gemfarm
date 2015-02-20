@@ -69,4 +69,4 @@ end
 
 # { print: "XX", block: lambda {
 #       |params| params[INDEX].COMMAND
-#       }, params: [] }
+#       }, params: [a, b] }

@@ -15,6 +15,7 @@ class Map
     @tile_array = Array.new(@map_array.size) { Array.new(@map_array[0].size) }
     set_tiles
     set_warps
+    set_textevents
     @show_tiles = Array.new(13) { Array.new(13) }
     @h = @tile_array.size
     @w = @tile_array[0].size
@@ -44,6 +45,15 @@ class Map
       tile_at(warp[:x] * 64,warp[:y] * 64).new_warp(warp)
     end
   end
+
+  def set_textevents
+    textevent_list = TEXT_EVENTS[@map_id]
+    # puts "#{@map_id} #{TEXT_EVENTS}"
+    textevent_list.each do |event|
+      # puts "#{event}"
+      tile_at(event[:x] * 64, event[:y] * 64).new_textevent(event[:text])
+    end
+  end  
 
   def tile_num_at(x, y)
     coords = [x / 64, y / 64]

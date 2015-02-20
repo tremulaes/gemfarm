@@ -35,6 +35,7 @@ BIG_MAP_ARRAY = [
 
 # map_id: home
 HOME_MAP_ARRAY = [
+# 0, 1, 2, 3, 4, 5, 6, 7, 8, 9
 [13,20,20,20,29,24,29,29,24,13],
 [13,19,19,19,28,28,28,28,27,13],
 [13,28,28,28,28,28,28,28,26,13],
@@ -59,6 +60,18 @@ WARPS = {
     { x: 1, y: 2, warp_x: 13, warp_y: 4, map_id: :farm, direction: :left},
     { x: 1, y: 3, warp_x: 13, warp_y: 5, map_id: :farm, direction: :left}
   ]
+}
+
+TEXT_EVENTS = {
+  home: [
+    { x: 1, y: 4, text: "Kurt Russell isn't on right now so there's no reason to watch."},
+    { x: 1, y: 1, text: "Agricultural science books. Wow this is boring."},
+    { x: 2, y: 1, text: "You haven't picked up a book in months, why act like you like reading now?"},
+    { x: 3, y: 1, text: "\"The vicar wouldn't be home for hours...\""},
+    { x: 7, y: 5, text: "Here's your ledger, containing all of the notes for your farm."}
+  ],
+  farm: [],
+  big: []
 }
 
 # determines collision; per TILESET, not MAP
