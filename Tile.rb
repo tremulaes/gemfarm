@@ -18,7 +18,7 @@ class Tile
 		if @holding
 			@holding.touch
 		elsif @tile_id == 2
-			@menu.items = EMPTY_FIELD_MENU
+			@window.show_menu(:field_tile_menu) 
 		end
 	end
 

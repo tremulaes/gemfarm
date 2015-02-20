@@ -14,12 +14,14 @@ class Player
   end
 
   def warp(x, y, direction)
-    @x, @y = x * 64, y * 64
-    @expected_tile = @current_tile = @map.tile_at(@x, @y)
-    @direction = direction
-    set_facing
-    calc_animation
+    @vel_x, @vel_y = 0, 0
     @warped = true
+    @x, @y = x * 64, y * 64
+    @current_tile = @map.tile_at(@x, @y)
+    @expected_tile = @current_tile
+    @direction = direction
+    calc_animation
+    set_facing
   end
 
   def interact

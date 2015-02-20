@@ -1,12 +1,14 @@
 class Message
-  attr_accessor :show
+  attr_accessor :show, :current_menu
 
-  def initialize(window)
+  def initialize(window, menu)
     @window = window
     @x, @y, @w, @h, @b = 0, 590, 704, 114, 5
     @black, @white = 0xff000000, 0xffffffff
     @font = Gosu::Font.new(@window, "Courier", 12)
     @text = ""
+    @current_menu = menu
+    @waiting_submenu = false # true when printing a follow up for a submenu
     @line_array = []
     @show_line = []
     @show_index
@@ -14,10 +16,13 @@ class Message
     @next_line = false
     @print_text = ["",""]
     @p_index = [0,0]
-    @waiting = false
+    @waiting = false # true when text is filling box
   end
 
-  def text=(new_text) #must be string!
+  def set_text(new_text, waiting_submenu = false) #must be string!
+    reset_prints
+    @current_menu.mode = :message
+    @waiting_submenu = waiting_submenu
     @text = new_text.clone
     @line_array.clear
     line_slicer(new_text)
@@ -39,11 +44,22 @@ class Message
     @line_array << new_text
   end
 
+  def close
+    reset_prints
+    @text = ""
+    @show = :false
+  end
+
   def interact
     if !@waiting
       @print_text = @show_line.clone
     else
-      move_line
+      if @waiting_submenu
+        @current_menu.mode = :select
+        @current_menu.interact
+      else
+        move_line
+      end
     end
   end
 
@@ -54,7 +70,13 @@ class Message
       @next_line = false if @line_array.size - @show_index <= 2
       reset_prints
     else
-      @show = :false
+      # if true
+      #   interact
+      # else 
+        @current_menu.close
+      # end
+      # @show = :false
+      # @window.mode = :field
     end
   end
 

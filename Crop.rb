@@ -23,7 +23,7 @@ class Crop
   end
 
   def touch
-    @menu.items = CROP_MENU
+    @window.show_menu(:crop_menu) 
   end
 
   def walk_on
