@@ -1,6 +1,6 @@
 class Tile
 	attr_reader :x, :y, :tile_id
-	attr_accessor :collidable, :holding#, :all_crops
+	attr_accessor :collidable, :holding
 	@@all_crops = Array.new
 
 	def initialize(tile_hash)
@@ -22,8 +22,6 @@ class Tile
 	def touch
 		if @holding
 			@holding.touch
-		elsif @tile_id == 2
-			@window.show_menu(:field_tile_menu) 
 		end
 	end
 
@@ -36,33 +34,27 @@ class Tile
 	def new_crop(type)
 		crop_hash = {
 			window: @window,
-      x: @x,
-      y: @y,
-      type: type,
-      tile: self,
-      menu: @menu
-  	}
+      type: type
+    }
 		@holding = Crop.new(crop_hash)
+    @collidable = true
 		@@all_crops << @holding
 	end
 
 	def kill_crop
 		@@all_crops.delete_if {|item| item.object_id == @holding.object_id }
 		@collidable = false
-		@holding = nil
+		@holding = FieldTile.new(@window)
 	end
 
-	def new_warp(warp_hash)
-		@holding = Warp.new(@window, warp_hash)
-	end
-
-	def new_textevent(text)
-		@holding = TextEvent.new(@window, text)
-	end
-
-	def collidable?
-		@collidable
-	end
+  def new_event(type, param = nil)
+    case type
+    when :warp then @holding = Warp.new(@window, param)
+    when :textevent then @holding = TextEvent.new(@window, param)
+    when :bed then 
+      @holding = Bed.new(@window)
+    end
+  end
 
 	def draw(x, y)
 		@img.draw(x, y, 0, 4, 4)

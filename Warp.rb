@@ -5,7 +5,6 @@ class Warp
     @warp_y = warp_hash[:warp_y] 
     @warp_map_id = warp_hash[:map_id]
     @direction = warp_hash[:direction] ||= :down
-    @draw = false
   end
 
   def touch

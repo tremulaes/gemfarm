@@ -51,16 +51,16 @@ class Player
       case @direction
       when :up
         @expected_tile = @map.tile_at(@x, @y - 64)
-        @expected_tile.collidable? ? @window.fx(:collision) : @vel_y = -4
+        @expected_tile.collidable ? @window.fx(:collision) : @vel_y = -4
       when :down
         @expected_tile = @map.tile_at(@x, @y + 64)
-        @expected_tile.collidable? ? @window.fx(:collision) : @vel_y = 4
+        @expected_tile.collidable ? @window.fx(:collision) : @vel_y = 4
       when :left
         @expected_tile = @map.tile_at(@x - 64, @y)
-        @expected_tile.collidable? ? @window.fx(:collision) : @vel_x = -4
+        @expected_tile.collidable ? @window.fx(:collision) : @vel_x = -4
       when :right
         @expected_tile = @map.tile_at(@x + 64, @y)
-        @expected_tile.collidable? ? @window.fx(:collision) : @vel_x = 4
+        @expected_tile.collidable ? @window.fx(:collision) : @vel_x = 4
       end
       @warped = false
     end

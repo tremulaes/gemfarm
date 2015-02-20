@@ -1,13 +1,14 @@
 class SubMenu
-  include MenuAction
+  # include MenuAction
   attr_accessor :show, :cursor, :mode
 
   def initialize(window, menu, player, message, font, coords, zOrder)
     @window, @menu, @player = window, menu, player
     @message = message
+    @params = {}
     calc_menu
     @font = font
-    @current_list = :map_menu
+    @current_list = [{print:"place"}]
     @print_list = []
     calc_print_list
     @mode = :select # :select, :message
@@ -19,7 +20,7 @@ class SubMenu
     @cursor = 0
   end
 
-  def current_list=(new_list)
+  def show_menu(new_list)
     if @current_list != new_list
       @current_list = new_list
       @cursor = 0
@@ -30,7 +31,7 @@ class SubMenu
 
   def calc_print_list
     @print_list.clear
-    @menus[@current_list].each do |hash|
+    @current_list.each do |hash| ################## CHANGES
       @print_list << hash[:print]
     end
   end
@@ -56,12 +57,24 @@ class SubMenu
       @message.interact
     else 
       calc_menu
-      @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
+      @current_list[@cursor][:block].call(@params)
+
+      # @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
     end
   end
 
   def close
     @menu.close
+  end
+
+  def calc_menu
+    @params.clear
+    @params = {
+      window: @window,
+      menu: self,
+      message: @message,
+      player: @player
+    }
   end
 
   def calc_dimen

@@ -1,20 +1,21 @@
-require_relative 'MenuAction'
+# require_relative 'MenuAction'
 require_relative 'Message'
 require_relative 'SubMenu'
 
 class Menu
-  include MenuAction
+  # include MenuAction
   attr_accessor :show, :cursor, :mode
 
-  def initialize(window, player)
+  def initialize(window, player, current_list)
     @window, @player = window, player
     @message = Message.new(@window, self)
+    @params = {}
     calc_menu
     @font = Gosu::Font.new(@window, "Courier", 12)
-    @current_list = :map_menu
+    @current_list = current_list
     @print_list = []
     calc_print_list
-    @mode = :select # :select, :message, :sub_menu1, :sub_menu2
+    @mode = :select # :select, :message, :prompt, :sub_menu1, :sub_menu2
     @x, @y, @w, @h, @b = 0, 96, 0, 0, 5
     calc_dimen
     @black = 0xff000000 # black
@@ -30,17 +31,17 @@ class Menu
 
   def use_sub_menu(menu, list)
     if menu == :sub_menu1
-      @sub_menu1.current_list = list
+      @sub_menu1.show_menu(list)
       @message.current_menu = @sub_menu1
     elsif menu == :sub_menu2
-      @sub_menu2.current_list = list
+      @sub_menu2.show_menu(list)
       @message.current_menu = @sub_menu2
     end
     @mode = menu
   end
 
-  def current_list=(new_list)
-    if @current_list != new_list
+  def show_menu(new_list, force_reset = false)
+    if @current_list != new_list || force_reset == true
       @current_list = new_list
       @cursor = 0
       @sub_menu1.cursor = 0
@@ -51,15 +52,19 @@ class Menu
   end
 
   def show_message(text)
-    @message.set_text(text)
+    @message.show_text(text)
     @mode = :message_only
+  end
+
+  def show_prompt(menu, text)
+    @message.show_text(text)
+    @mode = :prompt
+    show_menu(menu, true)
   end
 
   def calc_print_list
     @print_list.clear
-    @menus[@current_list].each do |hash|
-      @print_list << hash[:print]
-    end
+    @current_list.each { |hash| @print_list << hash[:print] }
   end
 
   def move_up
@@ -84,9 +89,9 @@ class Menu
     when :sub_menu1 then @sub_menu1.interact
     when :sub_menu2 then @sub_menu2.interact
     when :message_only then @message.interact
-    else 
+    else
       calc_menu
-      @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
+      @current_list[@cursor][:block].call(@params)
     end
   end
 
@@ -99,9 +104,19 @@ class Menu
     @window.mode = :field
   end
 
+  def calc_menu
+    @params.clear
+    @params = {
+      window: @window,
+      menu: self,
+      message: @message,
+      player: @player
+    }
+  end
+
   def calc_dimen
     @h = @print_list.size * 52 + 10
-    long = @print_list.max_by {|item| item.size }
+    long = @print_list.max_by {|item| item.size } 
     @w = long.size * 20 + 50
     @x = 656 - @w
   end

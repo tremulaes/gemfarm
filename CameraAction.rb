@@ -9,6 +9,7 @@ module CameraAction
         @window.set_timer(30)
       when :fade_in
         @final_color = 0x00000000
+        @change_color = 0xcc000000
         @window.set_timer(30)
       end
     else

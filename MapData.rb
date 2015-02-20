@@ -68,7 +68,16 @@ TEXT_EVENTS = {
     { x: 1, y: 1, text: "Agricultural science books. Wow this is boring."},
     { x: 2, y: 1, text: "You haven't picked up a book in months, why act like you like reading now?"},
     { x: 3, y: 1, text: "\"The vicar wouldn't be home for hours...\""},
-    { x: 7, y: 5, text: "Here's your ledger, containing all of the notes for your farm."}
+    { x: 7, y: 5, text: "Here's your ledger, containing all of the notes for your farm."},
+    { x: 8, y: 2, text: "Sleeping upside down hurts your back..."}
+  ],
+  farm: [],
+  big: []
+}
+
+MISC_EVENTS = {
+  home: [
+    {x: 8, y: 1, type: :bed}
   ],
   farm: [],
   big: []
