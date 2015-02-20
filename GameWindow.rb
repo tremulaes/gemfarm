@@ -53,8 +53,10 @@ class GameWindow < Gosu::Window
     @player.update
   end
 
-  def show_menu(menu_key)
-    @menu.current_list = menu_key
+  def show_menu(menu)
+    puts "inside show menu"
+    puts "#{menu}"
+    @menu.current_list = menu
     @mode = :menu
   end
 
@@ -126,6 +128,13 @@ class GameWindow < Gosu::Window
   end
 
   def calc_menu
+    @exit_confirm_menu = [
+      { print: "Yes", block: lambda {
+        |params| params[:window].close_game
+        } },
+      { print: "No", block: lambda {
+        |params| params[:menu].close
+        } } ] 
     @window_menu = [
       { print: "Energy", block: lambda {
         |params| params[:message].set_text("You have #{params[:player].energy} left today.")
@@ -136,10 +145,10 @@ class GameWindow < Gosu::Window
       { print: "Day Pass", block: lambda {
         |params| params[:window].calendar.day_pass
         } },
-      # { print: "Exit Game", block: lambda { # calls for submenu!
-      #   |params| params[:menu].use_sub_menu(:sub_menu1, :exit_confirm_menu)
-      #   params[:menu].set_text("Are you sure you want to quit?", true)
-      #   } },
+      { print: "Exit Game", block: lambda { # calls for submenu!
+        |params| params[:menu].use_sub_menu(:sub_menu1, @exit_confirm_menu)
+        params[:message].set_text("Are you sure you want to quit?", true)
+        } },
       { print: "Cancel", block: lambda {
         |params| params[:menu].close
         } } ]

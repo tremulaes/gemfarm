@@ -1,9 +1,9 @@
-require_relative 'MenuAction'
+# require_relative 'MenuAction'
 require_relative 'Message'
 require_relative 'SubMenu'
 
 class Menu
-  include MenuAction
+  # include MenuAction
   attr_accessor :show, :cursor, :mode
 
   def initialize(window, player, current_list)
@@ -21,7 +21,7 @@ class Menu
     @black = 0xff000000 # black
     @white = 0xffffffff # white
     @cursor = 0
-    # make_sub_menu
+    make_sub_menu
   end
 
   def make_sub_menu
@@ -44,8 +44,8 @@ class Menu
     if @current_list != new_list
       @current_list = new_list
       @cursor = 0
-      # @sub_menu1.cursor = 0
-      # @sub_menu2.cursor = 0
+      @sub_menu1.cursor = 0
+      @sub_menu2.cursor = 0
     end
     calc_print_list
     calc_dimen
@@ -58,14 +58,9 @@ class Menu
 
   def calc_print_list
     @print_list.clear
-
     @current_list.each do |hash| ################## CHANGES
       @print_list << hash[:print]
     end
-
-    # @menus[@current_list].each do |hash|
-    #   @print_list << hash[:print]
-    # end
   end
 
   def move_up
@@ -93,18 +88,26 @@ class Menu
     else 
       calc_menu
       @current_list[@cursor][:block].call(@params)
-
-      # @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
     end
   end
 
   def close
     @mode = :select
-    # @sub_menu1.mode = :select
-    # @sub_menu2.mode = :select
+    @sub_menu1.mode = :select
+    @sub_menu2.mode = :select
     @message.current_menu = self
     @message.close
     @window.mode = :field
+  end
+
+  def calc_menu
+    @params.clear
+    @params = {
+      window: @window,
+      menu: self,
+      message: @message,
+      player: @player
+    }
   end
 
   def calc_dimen

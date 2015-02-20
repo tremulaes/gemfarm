@@ -3,6 +3,7 @@ class Crop
   def initialize(crop_hash)
     @window = crop_hash[:window]
     @tile = crop_hash[:tile]
+    calc_menu
     @x = @tile.x
     @y = @tile.y
     @type = crop_hash[:type]
@@ -24,7 +25,7 @@ class Crop
   end
 
   def touch
-    @window.show_menu(:crop_menu) 
+    @window.show_menu(@crop_menu) 
   end
 
   def walk_on
@@ -37,6 +38,23 @@ class Crop
   def grow
     @stage >= 3 ? @stage = 0 : @stage += 1
     calc_animation
+  end
+
+  def calc_menu
+    @crop_menu = [
+      { print: "Water", block: lambda { 
+        |params| params[:window].fx(:bubble); params[:player].facing_tile.holding.grow; params[:menu].close
+        } },
+      { print: "Dance", block: lambda {
+        |params| params[:message].set_text("you danced with the crop but it's really hard to say why you would think that's a good idea.")
+        } },
+      { print: "Kick", block: lambda {
+        |params| params[:player].facing_tile.kill_crop
+        params[:message].set_text("You are a meanie you killed the crop"); params[:player].energy -= 1
+        } },
+      { print: "Cancel", block: lambda {
+        |params| params[:menu].close
+        } } ]
   end
 
   def calc_animation
