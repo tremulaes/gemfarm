@@ -4,9 +4,10 @@ class Player
   
   def initialize(window, map)
     @window, @map = window, map
-    @energy = @max_energy = 25
+    @energy = @max_energy = 10
     @animation = Gosu::Image::load_tiles(window, "media/sprites/ruby.png", 16, 16, true)
     @direction = :down
+    @animation_speed = 200
     calc_animation
     @x = @y = @vel_x = @vel_y = 0
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
@@ -15,6 +16,20 @@ class Player
 
   def day_pass
     @energy = @max_energy
+  end
+
+  def energy_change(value)
+    @energy += value
+    calc_animation
+  end
+
+  def no_energy?
+    if @energy >= 1
+      false
+    else
+      @window.show_message("You can't do that, you're all out of energy!")
+      true
+    end
   end
 
   def warp(x, y, direction)
@@ -114,11 +129,12 @@ class Player
     when :right then [@animation[12],@animation[13],@animation[14],@animation[15]]
     when :left then [@animation[4],@animation[5],@animation[6],@animation[7]]
     end
+    @max_energy / (@energy.nonzero? || 1) <= 0.20 ? @animation_speed = 200 : @animation_speed = 400
   end
 
   def draw(move = true)
     if move
-      img = @current_anim[Gosu::milliseconds / 200 % 4]
+      img = @current_anim[Gosu::milliseconds / @animation_speed % 4]
       @current_frame = img
     else
       img = @current_frame

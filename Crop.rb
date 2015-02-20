@@ -31,18 +31,21 @@ class Crop
 
   def calc_menu
     @crop_menu = [
-      { print: "Water", block: lambda { 
-        |params| params[:window].fx(:bubble); params[:player].facing_tile.holding.grow; params[:menu].close
+      { print: "Water", block: lambda { |params| 
+        params[:window].fx(:bubble); params[:player].facing_tile.holding.grow; params[:menu].close
         } },
-      { print: "Dance", block: lambda {
-        |params| params[:message].show_text("you danced with the crop but it's really hard to say why you would think that's a good idea.")
+      { print: "Dance", block: lambda { |params|
+        params[:message].show_text("you danced with the crop but it's really hard to say why you would think that's a good idea.")
         } },
-      { print: "Kick", block: lambda {
-        |params| params[:player].facing_tile.kill_crop
-        params[:message].show_text("You are a meanie you killed the crop"); params[:player].energy -= 1
+      { print: "Kick", block: lambda { |params|
+        if !params[:player].no_energy?
+          params[:player].facing_tile.kill_crop
+          params[:message].show_text("You are a meanie you killed the crop")
+          params[:player].energy_change(-1)
+        end
         } },
-      { print: "Cancel", block: lambda {
-        |params| params[:menu].close
+      { print: "Cancel", block: lambda { |params| 
+        params[:menu].close
         } } ]
   end
 

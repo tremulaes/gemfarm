@@ -132,28 +132,28 @@ class GameWindow < Gosu::Window
 
   def calc_menu
     @exit_confirm_menu = [
-      { print: "Yes", block: lambda {
-        |params| params[:window].close_game
+      { print: "Yes", block: lambda { |params|
+        params[:window].close_game
         } },
-      { print: "No", block: lambda {
-        |params| params[:menu].close
+      { print: "No", block: lambda { |params|
+        params[:menu].close
         } } ] 
     @window_menu = [
-      { print: "Energy", block: lambda {
-        |params| params[:message].show_text("You have #{params[:player].energy} left today.")
+      { print: "Energy", block: lambda { |params| 
+        params[:message].show_text("You have #{params[:player].energy} left today.")
         } },
-      { print: "Date", block: lambda {
-        |params| params[:message].show_text("Today is day #{params[:window].calendar.day}; there are #{30 - params[:window].calendar.day} days left until market. Get to work!")
+      { print: "Date", block: lambda { |params|
+        params[:message].show_text("Today is day #{params[:window].calendar.day}; there are #{30 - params[:window].calendar.day} days left until market. Get to work!")
         } },
-      { print: "Day Pass", block: lambda {
-        |params| params[:window].calendar.day_pass
+      { print: "Inventory", block: lambda { |params|
+        params[:message].show_text("This feature coming soon.")
         } },
-      { print: "Exit Game", block: lambda { # calls for submenu!
-        |params| params[:menu].use_sub_menu(:sub_menu1, @exit_confirm_menu)
+      { print: "Exit Game", block: lambda { |params| #calls a submenu!
+        params[:menu].use_sub_menu(:sub_menu1, @exit_confirm_menu)
         params[:message].show_text("Are you sure you want to quit?", true)
         } },
-      { print: "Cancel", block: lambda {
-        |params| params[:menu].close
+      { print: "Cancel", block: lambda { |params|
+        params[:menu].close
         } } ]
   end
 
