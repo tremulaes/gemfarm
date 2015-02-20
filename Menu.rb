@@ -1,10 +1,5 @@
 require_relative 'MenuAction'
-require_relative 'InterfaceSound'
-
-# PLANT_MENU = [{ water: "Water"}, { dance: "Dance"}, { kick: "Kick" }]
-# EMPTY_FIELD_MENU = [{ plant_corn: "Plant Corn"}, { plant_pumpkin: "Plant Pumpkin"}, { plant_tomato: "Plant Tomato"}]
-# MAP_SCREEN_MENU = [{ energy: "Energy" }, { laugh: "Laugh" }, { warp: "Warp" }, { exit: "Exit"}]
-# EXIT_CONFIRM_MENU = [{ exit_yes: "Yes"}, exit_no: "No"]
+require_relative 'SubMenu'
 
 class Menu
   include MenuAction
@@ -18,17 +13,38 @@ class Menu
     @current_list = :map_menu
     @print_list = []
     calc_print_list
-    @mode = :select # :select, :message
+    @mode = :select # :select, :message, :sub_menu1, :sub_menu2
     @x, @y, @w, @h, @b = 0, 96, 0, 0, 5
     calc_dimen
     @black = 0xff000000 # black
     @white = 0xffffffff # white
     @cursor = 0
+    make_sub_menu
+  end
+
+  def make_sub_menu
+    @sub_menu1 = SubMenu.new(@window, self, @player, @message, @font, [606, 146], 8)
+    @sub_menu2 = SubMenu.new(@window, self, @player, @message, @font, [556, 196], 9)
+  end
+
+  def use_sub_menu(menu, list)
+    if menu == :sub_menu1
+      @sub_menu1.current_list = list
+      @message.current_menu = @sub_menu1
+    elsif menu == :sub_menu2
+      @sub_menu2.current_list = list
+      @message.current_menu = @sub_menu2
+    end
+    @mode = menu
   end
 
   def current_list=(new_list)
-    puts "#{@current_list}: #{new_list}"
-    @current_list = new_list
+    if @current_list != new_list
+      @current_list = new_list
+      @cursor = 0
+      @sub_menu1.cursor = 0
+      @sub_menu2.cursor = 0
+    end
     calc_print_list
     calc_dimen
   end
@@ -41,28 +57,40 @@ class Menu
   end
 
   def move_up
-    if @cursor == 0
-      @cursor = @print_list.size - 1
-    else
-      @cursor -= 1
+    case @mode
+    when :sub_menu1 then @sub_menu1.move_up
+    when :sub_menu2 then @sub_menu2.move_up
+    else @cursor == 0 ? @cursor = @print_list.size - 1 : @cursor -= 1
     end
   end
 
   def move_down
-    if @cursor == (@print_list.size - 1)
-      @cursor = 0
-    else
-      @cursor += 1
+    case @mode
+    when :sub_menu1 then @sub_menu1.move_down
+    when :sub_menu2 then @sub_menu2.move_down
+    else @cursor == (@print_list.size - 1) ? @cursor = 0 : @cursor += 1
     end
   end
 
   def interact
-    if @mode == :message
-      @message.interact
+    case @mode
+    when :message then @message.interact
+    when :sub_menu1 then @sub_menu1.interact
+    when :sub_menu2 then @sub_menu2.interact
     else 
       calc_menu
       @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
     end
+  end
+
+  def close
+    puts "Closed menus!"
+    @mode = :select
+    @sub_menu1.mode = :select
+    @sub_menu2.mode = :select
+    @message.current_menu = self
+    @message.close
+    @window.mode = :field
   end
 
   def calc_dimen
@@ -80,5 +108,9 @@ class Menu
     end
     @window.draw_triangle(@x + 5, @cursor * 52 + 20 + @y, @black, @x + 5, @cursor * 52 + 40 + @y, @black, @x + 22, @cursor * 52 + 30 + @y, @black, 7) # cursor
     @message.draw
+    case @mode
+    when :sub_menu1 then @sub_menu1.draw
+    when :sub_menu2 then @sub_menu1.draw; @sub_menu2.draw
+    end
   end
 end

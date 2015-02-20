@@ -18,7 +18,7 @@ class Tile
 		if @holding
 			@holding.touch
 		elsif @tile_id == 2
-			@window.show_menu(:field_menu) 
+			@window.show_menu(:field_tile_menu) 
 		end
 	end
 

@@ -55,11 +55,6 @@ class GameWindow < Gosu::Window
     @mode = :menu
   end
 
-  def close_menu
-    @mode = :field
-    @menu.current_list = :map_menu
-  end
-
   def draw
     @camera.draw(@viewport, @map.tile_array, @map.def_img)
     if @mode == :menu
@@ -147,37 +142,13 @@ class GameWindow < Gosu::Window
         when :field
           @player.interact
         end
-
-        # if @menu.show == :continue
-        #   @menu.interact
-        # else
-        #   if @message.show == :true
-        #     @message.interact
-        #   else
-        #     if @menu.show == :true
-        #       @menu.interact
-        #     else
-        #       @player.interact
-        #     end
-        #   end
-        # end
       when Gosu::KbX
         case @mode
         when :menu
-          close_menu   
+          @menu.close
         when :field
           show_menu(:map_menu)
         end
-
-        # if @message.show == :false
-        #   if @mode == :menu
-        #     fx(:close_menu)
-        #     @
-        #   else
-        #     fx(:open_menu)
-        #     show_menu(:map)
-        #   end
-        # end
       when Gosu::KbUp
         if @mode == :menu
           @menu.move_up
