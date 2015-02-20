@@ -22,7 +22,6 @@ class GameWindow < Gosu::Window
     super(704, 704, false)
     self.caption = 'Gem Farm'
     @message = Message.new(self)
-    @menu = Menu.new(self, @message)
     generate_maps
     @map = @maps[:farm][0]
     @map_id = :farm
@@ -37,21 +36,32 @@ class GameWindow < Gosu::Window
     @waiting = false
     @queue = []
     @action
+    @menu = Menu.new(self, @message, @player)
+    @mode = :field
   end
 
   def update
     time_tick
     calc_viewport
     @camera.update(@player.x, @player.y)
-    @menu.update
     input_calc if !@waiting
     do_action if @action
     @player.update
   end
 
+  def show_menu(menu_key)
+    @menu.current_list = menu_key
+    @mode = :menu
+  end
+
+  def close_menu
+    @mode = :field
+    @menu.current_list = :map_menu
+  end
+
   def draw
     @camera.draw(@viewport, @map.tile_array, @map.def_img)
-    if @menu.show != :false || @message.show == :true
+    if @mode == :menu
       @player.draw(false)
       @menu.draw
       @message.draw
@@ -100,9 +110,7 @@ class GameWindow < Gosu::Window
       change_map_hash = @action[1]
       @map = @maps[change_map_hash[:warp_map_id]][0]
       @map_id = change_map_hash[:warp_map_id]
-      # puts "old map: #{@player.map}"
       @player.map = @map
-      # puts "new map: #{@player.map}"
       @player.warp(change_map_hash[:warp_x], change_map_hash[:warp_y], change_map_hash[:direction])
       calc_viewport
       effect(:fade_in)
@@ -111,7 +119,7 @@ class GameWindow < Gosu::Window
   end
 
   def input_calc
-    if @menu.show == :false && @message.show == :false
+    if @mode == :field
       if @player.vel_x == 0 && @player.vel_y == 0
         if (button_down?(Gosu::KbLeft) || button_down?(Gosu::GpLeft) || button_down?(Gosu::KbA))
           @player.accelerate(:left)
@@ -132,35 +140,49 @@ class GameWindow < Gosu::Window
       when Gosu::KbEscape
         close_game
       when Gosu::KbZ
-        if @menu.show == :continue
+        case @mode
+        when :menu
           @menu.interact
-        else
-          if @message.show == :true
-            @message.interact
-          else
-            if @menu.show == :true
-              @menu.interact
-            else
-              @player.interact
-            end
-          end
+        when :field
+          @player.interact
         end
+
+        # if @menu.show == :continue
+        #   @menu.interact
+        # else
+        #   if @message.show == :true
+        #     @message.interact
+        #   else
+        #     if @menu.show == :true
+        #       @menu.interact
+        #     else
+        #       @player.interact
+        #     end
+        #   end
+        # end
       when Gosu::KbX
-        if @message.show == :false
-          if @menu.show == :true
-            fx(:close_menu)
-            @menu.show = :false
-          else
-            fx(:open_menu)
-            @menu.items = MAP_SCREEN_MENU
-          end
+        case @mode
+        when :menu
+          close_menu   
+        when :field
+          show_menu(:map_menu)
         end
+
+        # if @message.show == :false
+        #   if @mode == :menu
+        #     fx(:close_menu)
+        #     @
+        #   else
+        #     fx(:open_menu)
+        #     show_menu(:map)
+        #   end
+        # end
       when Gosu::KbUp
-        if @menu.show != :false
+        if @mode == :menu
           @menu.move_up
         end
       when Gosu::KbDown
-        if @menu.show != :false
+        if @mode == :menu
           @menu.move_down
         end
       end
