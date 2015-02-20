@@ -1,8 +1,8 @@
 class Message
   attr_accessor :show
 
-  def initialize(window)
-    @window = window
+  def initialize(window, menu)
+    @window, @menu = window, menu
     @x, @y, @w, @h, @b = 0, 590, 704, 114, 5
     @black, @white = 0xff000000, 0xffffffff
     @font = Gosu::Font.new(@window, "Courier", 12)
@@ -18,6 +18,7 @@ class Message
   end
 
   def text=(new_text) #must be string!
+    @menu.mode = :message
     @text = new_text.clone
     @line_array.clear
     line_slicer(new_text)
@@ -55,6 +56,8 @@ class Message
       reset_prints
     else
       @show = :false
+      @menu.mode = :select
+      @window.mode = :field
     end
   end
 

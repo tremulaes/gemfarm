@@ -16,12 +16,12 @@ require_relative 'Warp'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :map_id, :player, :waiting
+  attr_accessor :mode
   include InterfaceSound
 
   def initialize
     super(704, 704, false)
     self.caption = 'Gem Farm'
-    @message = Message.new(self)
     generate_maps
     @map = @maps[:farm][0]
     @map_id = :farm
@@ -36,7 +36,8 @@ class GameWindow < Gosu::Window
     @waiting = false
     @queue = []
     @action
-    @menu = Menu.new(self, @message, @player)
+    # @message = Message.new(self, @menu)
+    @menu = Menu.new(self, @player)
     @mode = :field
   end
 
@@ -64,7 +65,7 @@ class GameWindow < Gosu::Window
     if @mode == :menu
       @player.draw(false)
       @menu.draw
-      @message.draw
+      # @message.draw
     else
       @player.draw
     end
