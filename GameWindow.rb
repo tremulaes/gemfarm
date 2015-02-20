@@ -54,8 +54,6 @@ class GameWindow < Gosu::Window
   end
 
   def show_menu(menu)
-    puts "inside show menu"
-    puts "#{menu}"
     @menu.current_list = menu
     @mode = :menu
   end

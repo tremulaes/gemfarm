@@ -1,18 +1,11 @@
 class Crop
   attr_reader :type
   def initialize(crop_hash)
-    @window = crop_hash[:window]
-    @tile = crop_hash[:tile]
-    calc_menu
-    @x = @tile.x
-    @y = @tile.y
-    @type = crop_hash[:type]
-    @menu = crop_hash[:menu]
+    @window, @type = crop_hash[:window], crop_hash[:type]
     load_tileset
     @stage = 0
     calc_animation
-    @tile.collidable = true
-    @current_frame = @animation[0]
+    calc_menu
   end
 
   def load_tileset
@@ -28,11 +21,7 @@ class Crop
     @window.show_menu(@crop_menu) 
   end
 
-  def walk_on
-  end
-
   def day_pass
-    puts "A day passed for me! I'm a #{@type} at stage #{@stage}!"
   end
 
   def grow
@@ -64,16 +53,11 @@ class Crop
       when 1 then [@animation[2],@animation[3]]
       when 2 then [@animation[4],@animation[5]]
       when 3 then [@animation[6],@animation[7]]
-      end 
+      end
   end
 
-  def draw(x,y, move = true)
-    if move
-      img = @current_anim[Gosu::milliseconds / 600 % 2]
-      @current_frame = img
-    else
-      img = @current_frame
-    end
+  def draw(x,y)
+    img = @current_anim[Gosu::milliseconds / 600 % 2]
     img.draw(x, y, 2, 4, 4)
   end
 end
