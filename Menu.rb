@@ -6,12 +6,13 @@ class Menu
   include MenuAction
   attr_accessor :show, :cursor, :mode
 
-  def initialize(window, player)
+  def initialize(window, player, current_list)
     @window, @player = window, player
     @message = Message.new(@window, self)
+    @params = {}
     calc_menu
     @font = Gosu::Font.new(@window, "Courier", 12)
-    @current_list = :map_menu
+    @current_list = current_list
     @print_list = []
     calc_print_list
     @mode = :select # :select, :message, :sub_menu1, :sub_menu2
@@ -20,7 +21,7 @@ class Menu
     @black = 0xff000000 # black
     @white = 0xffffffff # white
     @cursor = 0
-    make_sub_menu
+    # make_sub_menu
   end
 
   def make_sub_menu
@@ -43,8 +44,8 @@ class Menu
     if @current_list != new_list
       @current_list = new_list
       @cursor = 0
-      @sub_menu1.cursor = 0
-      @sub_menu2.cursor = 0
+      # @sub_menu1.cursor = 0
+      # @sub_menu2.cursor = 0
     end
     calc_print_list
     calc_dimen
@@ -57,9 +58,14 @@ class Menu
 
   def calc_print_list
     @print_list.clear
-    @menus[@current_list].each do |hash|
+
+    @current_list.each do |hash| ################## CHANGES
       @print_list << hash[:print]
     end
+
+    # @menus[@current_list].each do |hash|
+    #   @print_list << hash[:print]
+    # end
   end
 
   def move_up
@@ -86,14 +92,16 @@ class Menu
     when :message_only then @message.interact
     else 
       calc_menu
-      @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
+      @current_list[@cursor][:block].call(@params)
+
+      # @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
     end
   end
 
   def close
     @mode = :select
-    @sub_menu1.mode = :select
-    @sub_menu2.mode = :select
+    # @sub_menu1.mode = :select
+    # @sub_menu2.mode = :select
     @message.current_menu = self
     @message.close
     @window.mode = :field
@@ -101,7 +109,7 @@ class Menu
 
   def calc_dimen
     @h = @print_list.size * 52 + 10
-    long = @print_list.max_by {|item| item.size }
+    long = @print_list.max_by {|item| item.size } 
     @w = long.size * 20 + 50
     @x = 656 - @w
   end

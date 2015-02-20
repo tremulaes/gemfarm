@@ -5,6 +5,7 @@
 # array[3] = hash array for default object instantiation [{type: [x,y]}, {type: [x,y]}]
 
 require 'gosu'
+require_relative 'Bed'
 require_relative 'Calendar'
 require_relative 'Camera'
 require_relative 'Crop'
@@ -17,7 +18,7 @@ require_relative 'TextEvent'
 
 class GameWindow < Gosu::Window
   attr_reader :map, :map_id, :player, :waiting, :calendar
-  attr_accessor :mode
+  attr_accessor :mode, :menu
   include InterfaceSound
 
   def initialize
@@ -33,7 +34,8 @@ class GameWindow < Gosu::Window
     @player.warp(4,5,:down)
     @map.calc_show_tiles(@player.x,@player.y)
     @calendar = Calendar.new(self)
-    @menu = Menu.new(self, @player)
+    calc_menu
+    @menu = Menu.new(self, @player, @window_menu)
     @camera = Camera.new(self, @map)
     @timer = 0
     @waiting = false
@@ -123,6 +125,26 @@ class GameWindow < Gosu::Window
     end
   end
 
+  def calc_menu
+    @window_menu = [
+      { print: "Energy", block: lambda {
+        |params| params[:message].set_text("You have #{params[:player].energy} left today.")
+        } },
+      { print: "Date", block: lambda {
+        |params| params[:message].set_text("Today is day #{params[:window].calendar.day}; there are #{30 - params[:window].calendar.day} days left until market. Get to work!")
+        } },
+      { print: "Day Pass", block: lambda {
+        |params| params[:window].calendar.day_pass
+        } },
+      # { print: "Exit Game", block: lambda { # calls for submenu!
+      #   |params| params[:menu].use_sub_menu(:sub_menu1, :exit_confirm_menu)
+      #   params[:menu].set_text("Are you sure you want to quit?", true)
+      #   } },
+      { print: "Cancel", block: lambda {
+        |params| params[:menu].close
+        } } ]
+  end
+
   def input_calc
     if @mode == :field
       if @player.vel_x == 0 && @player.vel_y == 0
@@ -156,7 +178,7 @@ class GameWindow < Gosu::Window
         when :menu
           @menu.close
         when :field
-          show_menu(:map_menu)
+          show_menu(@window_menu)
         end
       when Gosu::KbUp
         if @mode == :menu
