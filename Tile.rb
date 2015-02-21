@@ -1,5 +1,7 @@
 require_relative 'Crop'
 require_relative 'SapphireCorn'
+require_relative 'EmeraldPumpkin'
+require_relative 'AmethystTomato'
 
 class Tile
 	attr_reader :x, :y, :tile_id

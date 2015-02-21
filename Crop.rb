@@ -1,5 +1,5 @@
 class Crop
-  attr_reader :type
+  attr_reader :type, :happy
   def initialize(crop_hash)
     @window, @type, @name = crop_hash[:window], crop_hash[:type], crop_hash[:name]
     @field_image = crop_hash[:field_image]
@@ -110,7 +110,7 @@ class Crop
       { print: "Weed", block: lambda { |params|
         if !params[:player].no_energy?(2)
           @daily_up[:weed] += 1
-          params[:message].show_text("You spend some time weeding the #{@type} and it looks much cleaner.")
+          params[:message].show_text("You spend some time weeding the #{@type}, looks better.")
           params[:player].energy_change(-2)
         end
         } },

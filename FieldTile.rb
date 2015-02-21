@@ -61,7 +61,7 @@ class FieldTile
       } },
       { print: "Fertilize", block: lambda { |params|
         if !params[:player].no_energy?(1)
-          params[:message].show_text("Cow dung is cheap, and you spread it all around for good measure.")
+          params[:message].show_text("Cow dung is cheap, and you spread it all around the field.")
           params[:player].facing_tile.holding.fertilized = true
           params[:player].energy_change(-1)
         end

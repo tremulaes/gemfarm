@@ -45,7 +45,6 @@ class SapphireCorn < Crop
     @daily_up[:spray] > 1 ? @daily_up[:happy] += 3 : @daily_up[:happy] += @daily_up[:spray] * 5
     @daily_up[:happy] += @daily_up[:hug] * 6
     @daily_up[:talk] < 2 ? @daily_up[:happy] += @daily_up[:talk] * 3 : @daily_up[:happy] += @daily_up[:talk] * 5
-    # puts "#{@daily_up}"
     calc_animation
   end
 end
