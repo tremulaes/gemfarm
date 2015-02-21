@@ -58,8 +58,6 @@ class SubMenu
     else 
       calc_menu
       @current_list[@cursor][:block].call(@params)
-
-      # @menus[@current_list][@cursor][:block].call(@menus[@current_list][@cursor][:params])
     end
   end
 
@@ -71,9 +69,11 @@ class SubMenu
     @params.clear
     @params = {
       window: @window,
-      menu: self,
+      menu: @menu,
       message: @message,
-      player: @player
+      player: @player,
+      sub_menu1: @menu.sub_menu1,
+      sub_menu2: @menu.sub_menu2
     }
   end
 

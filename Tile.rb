@@ -1,7 +1,13 @@
+require_relative 'Crop'
+require_relative 'SapphireCorn'
+require_relative 'EmeraldPumpkin'
+require_relative 'AmethystTomato'
+
 class Tile
 	attr_reader :x, :y, :tile_id
 	attr_accessor :collidable, :holding
 	@@all_crops = Array.new
+  @@harvested_crops = Array.new
 
 	def initialize(tile_hash)
 		@window = tile_hash[:window]
@@ -31,18 +37,28 @@ class Tile
 		end
 	end
 
-	def new_crop(type)
+	def new_crop(type, img, state, name)
 		crop_hash = {
 			window: @window,
-      type: type
+      type: type,
+      field_image: img,
+      field_state: state, 
+      name: name
     }
-		@holding = Crop.new(crop_hash)
+    case type
+    when :corn then @holding = SapphireCorn.new(crop_hash)
+    when :pumpkin then @holding = EmeraldPumpkin.new(crop_hash)
+    when :tomato then @holding = AmethystTomato.new(crop_hash)
+    end
     @collidable = true
 		@@all_crops << @holding
 	end
 
-	def kill_crop
-		@@all_crops.delete_if {|item| item.object_id == @holding.object_id }
+	def erase_crop(reason = :kill)
+    if reason == :harvest
+      @@all_crops << @holding
+    end
+    @@all_crops.delete_if {|item| item.object_id == @holding.object_id }
 		@collidable = false
 		@holding = FieldTile.new(@window)
 	end
@@ -56,7 +72,7 @@ class Tile
     end
   end
 
-	def draw(x, y)
+  def draw(x, y)
 		@img.draw(x, y, 0, 4, 4)
 		@holding.draw(x, y) if @holding
 	end

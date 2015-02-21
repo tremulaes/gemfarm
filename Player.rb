@@ -4,7 +4,7 @@ class Player
   
   def initialize(window, map)
     @window, @map = window, map
-    @energy = @max_energy = 10
+    @energy = @max_energy = 35
     @animation = Gosu::Image::load_tiles(window, "media/sprites/ruby.png", 16, 16, true)
     @direction = :down
     @animation_speed = 200
@@ -12,6 +12,7 @@ class Player
     @x = @y = @vel_x = @vel_y = 0
     @expected_tile = @current_tile = @map.tile_at(@x, @y)
     @warped = false
+    @no_energy = ["You are way too tired to do that.", "You can't stop yawning long enough to try.", "You're not a machine, you need to rest.", "Go to bed. Really. Get some sleep.", "The crops will be waiting here in the morning.", "Being this sleepy makes it impossible to work.", "Okay buster you won't get anything accomplished when you're this tired."]
   end
 
   def day_pass
@@ -23,11 +24,11 @@ class Player
     calc_animation
   end
 
-  def no_energy?
-    if @energy >= 1
+  def no_energy?(cost)
+    if @energy -cost >= 1
       false
     else
-      @window.show_message("You can't do that, you're all out of energy!")
+      @window.show_message(@no_energy.sample)
       true
     end
   end

@@ -1,10 +1,8 @@
-# require_relative 'MenuAction'
 require_relative 'Message'
 require_relative 'SubMenu'
 
 class Menu
-  # include MenuAction
-  attr_accessor :show, :cursor, :mode
+  attr_accessor :show, :cursor, :mode, :sub_menu1, :sub_menu2
 
   def initialize(window, player, current_list)
     @window, @player = window, player
@@ -110,7 +108,9 @@ class Menu
       window: @window,
       menu: self,
       message: @message,
-      player: @player
+      player: @player,
+      sub_menu1: @sub_menu1,
+      sub_menu2: @sub_menu2
     }
   end
 
