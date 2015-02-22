@@ -2,7 +2,7 @@ class Sound
   def initialize(window)
     @window = window
     load_songs
-    @current_song = @early_farming
+    @current_song = @title
     @current_song.play(true)
     load_sounds
     @effect = :none
@@ -13,8 +13,14 @@ class Sound
   def update
     queue_handle
     case @effect
-    when :fade_out then @bgm_vol >= 0 ? @bgm_vol -= 0.005 : @effect = :none
-    when :fade_in then @bgm_vol <= 1 ? @bgm_vol += 0.005 : @effect = :none
+    when :fade_out then @bgm_vol >= 0 ? @bgm_vol -= 0.010 : @effect = :none
+    when :fade_in then @bgm_vol <= 1 ? @bgm_vol += 0.010 : @effect = :none
+    when :start_game
+      @current_song.stop
+      @current_song = @early_farming
+      @current_song.play(true)
+      @bgm_vol = 1.0
+      @effect = :none
     when :change_song
       @current_song.stop
       @current_song == @early_farming ? @current_song = @late_farming : @current_song = @early_farming
@@ -30,6 +36,7 @@ class Sound
 
   def effect(*effect)
     effect.each { |effect| @queue << effect}
+    puts @queue
   end
 
   def day_pass(day)
@@ -41,6 +48,7 @@ class Sound
   def load_songs
     @early_farming = Gosu::Song.new(@window, "media/sound/farming.wav")
     @late_farming = Gosu::Song.new(@window, "media/sound/farming.wav")
+    @title = Gosu::Song.new(@window, "media/sound/title.wav")
   end
 
   def load_sounds

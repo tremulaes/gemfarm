@@ -16,6 +16,7 @@ require_relative 'Player'
 require_relative 'Sound'
 require_relative 'Warp'
 require_relative 'TextEvent'
+require_relative 'Title'
 require_relative 'Timer'
 
 class GameWindow < Gosu::Window
@@ -25,6 +26,7 @@ class GameWindow < Gosu::Window
   def initialize
     super(704, 704, false)
     self.caption = 'Gem Farm'
+    @title = Title.new(self)
     generate_maps
     @map = @maps[:home][0]
     @sounds = Sound.new(self)
@@ -38,18 +40,22 @@ class GameWindow < Gosu::Window
     @timer = Timer.new
     @queue = []
     @action
-    @mode = :field # :field, :message, :menu
+    @mode = :title # :title, :field, :message, :menu
   end
 
   def update
     @timer.update
     @sounds.update
-    @action = @queue.shift if @queue.size > 0 && !@timer.waiting
     calc_viewport
-    @camera.update(@player.x, @player.y)
-    input_calc if !@timer.waiting
-    do_action if @action
-    @player.update
+    case @mode
+    when :title then @title.update  
+    else 
+      @action = @queue.shift if @queue.size > 0 && !@timer.waiting
+      @camera.update(@player.x, @player.y)
+      input_calc if !@timer.waiting
+      do_action if @action
+      @player.update
+    end
   end
 
   def show_menu(menu)
@@ -72,15 +78,19 @@ class GameWindow < Gosu::Window
   end
 
   def draw
-    @camera.draw(@viewport, @map.tile_array, @map.def_img)
     case @mode
+    when :title
+      @title.draw
     when :menu
+      @camera.draw(@viewport, @map.tile_array, @map.def_img)
       @player.draw(false)
       @menu.draw
     when :message
+      @camera.draw(@viewport, @map.tile_array, @map.def_img)
       @player.draw(false)
       @menu.message.draw
-    else
+    else # :field
+      @camera.draw(@viewport, @map.tile_array, @map.def_img)
       @player.draw
     end
   end
@@ -167,10 +177,10 @@ class GameWindow < Gosu::Window
   def button_down(id)
     if @player.vel_x == 0 && @player.vel_y == 0
       case id
-      when Gosu::KbEscape
-        close_game
       when Gosu::KbZ
         case @mode
+        when :title
+          @title.interact
         when :menu
           @menu.interact
         when :field
@@ -178,18 +188,22 @@ class GameWindow < Gosu::Window
         end
       when Gosu::KbX
         case @mode
+        when :title
+          @title.interact
         when :menu
           @menu.close
         when :field
           show_menu(@window_menu)
         end
       when Gosu::KbUp
-        if @mode == :menu
-          @menu.move_up
+        case @mode
+        when :title then @title.move_up
+        when :menu then @menu.move_up
         end
       when Gosu::KbDown
-        if @mode == :menu
-          @menu.move_down
+        case @mode
+        when :title then @title.move_down
+        when :menu then @menu.move_down
         end
       end
     end

@@ -39,6 +39,12 @@ class Camera
         else
           @effect = :none
         end
+      when :white_fade #27 ticks
+        if @change_color >= @final_color
+          @change_color -= 16777216 * 8 # 1/256 for alpha column!
+        else
+          @effect = :none
+        end
       end
     end
   end
@@ -58,6 +64,8 @@ class Camera
       when :fade_out
         draw_fade
       when :fade_in
+        draw_fade
+      when :white_fade
         draw_fade
       end
     end

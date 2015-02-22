@@ -38,6 +38,7 @@ class EmeraldPumpkin < Crop
   end
 
   def calc_happy #water, weed, spray, massage, carve
+    puts "#{@daily_up}"
     @daily_up[:happy] = 0
     @daily_up[:water] > 8 ? @daily_up[:happy] += 20 : @daily_up[:happy] += @daily_up[:water] * 3
     @daily_up[:happy] += @daily_up[:weed] * 4

@@ -11,6 +11,10 @@ module CameraAction
         @final_color = 0x00000000
         @change_color = 0xcc000000
         @window.set_timer(30)
+      when :white_fade
+        @final_color = 0x00FFFFFF
+        @change_color = 0xFFFFFFFF
+        @window.set_timer(60)
       end
     else
       @queue << effect
